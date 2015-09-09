@@ -37,4 +37,5 @@ if (window.location.href.indexOf('/agar.io/') + 1) {
             document.getElementsByTagName('HEAD')[0].appendChild(s);
         }
     }
+    xhr.send();
 }
