@@ -1,7 +1,6 @@
 var host = 'agar.io';
 console.log('loaded')
-asd asd
-a;asd
+
 i18n_lang = "en";
 i18n_dict = {
     "en": {
