@@ -1462,12 +1462,12 @@ var host = 'agar.io';
                                     (canvasContext.fillStyle = this.color, canvasContext.strokeStyle = this.color);
 
                                 // set virus color
-                                if(this.isVirus){
-                                    var virusSize = realSize(this.size);
-                                    if (virusSize > 120){
-
-                                    }
-                                }
+                                //if(this.isVirus){
+                                //    var virusSize = realSize(this.size);
+                                //    if (virusSize > 120){
+                                //
+                                //    }
+                                //}
                                 // set enemies colors
                                 if (this.id && 0 != myCells.length && (myCells.indexOf(this) == -1) && !this.isVirus && this.size > 30) {
 
