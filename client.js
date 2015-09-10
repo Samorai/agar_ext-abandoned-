@@ -1460,6 +1460,14 @@ var host = 'agar.io';
                                 canvasContext.lineJoin = this.isVirus ? "miter" : "round";
                                 colored ? (canvasContext.fillStyle = "#FFFFFF", canvasContext.strokeStyle = "#AAAAAA") :
                                     (canvasContext.fillStyle = this.color, canvasContext.strokeStyle = this.color);
+
+                                // set virus color
+                                if(this.isVirus){
+                                    var virusSize = realSize(this.size);
+                                    if (virusSize > 120){
+
+                                    }
+                                }
                                 // set enemies colors
                                 if (this.id && 0 != myCells.length && (myCells.indexOf(this) == -1) && !this.isVirus && this.size > 30) {
 
@@ -1480,8 +1488,12 @@ var host = 'agar.io';
                                     var multiplier = 1.26;
 
                                     if (mySize >= enemySize) {
+                                        // you can split twice
+                                        if ((mySize / 4) > (enemySize * multiplier)) {
+                                            canvasContext.fillStyle = '#ffffaa';
+                                        }
                                         // you can split
-                                        if ((mySize / 2) > (enemySize * multiplier)) {
+                                        else if ((mySize / 2) > (enemySize * multiplier)) {
                                             canvasContext.fillStyle = '#7FFF00';
                                         }
                                         // you can eat
@@ -1493,7 +1505,12 @@ var host = 'agar.io';
                                             canvasContext.fillStyle = '#9E9E9E';
                                         }
                                     } else {
-                                        if ((enemySize / 2) > (mySize * multiplier)) {
+                                        // can split to you twice
+                                        if ((enemySize / 4) > (mySize * multiplier)) {
+                                            canvasContext.fillStyle = '#000000';
+                                        }
+                                        //// can split to you
+                                        else if ((enemySize / 2) > (mySize * multiplier)) {
                                             canvasContext.fillStyle = '#ff0000';
                                         }
                                         // can eat you
@@ -1545,8 +1562,9 @@ var host = 'agar.io';
                                 }
 
                                 // write cell and virus weight
-                                0 < this.id && showMass && (window || (this.isVirus || this.j) && 20 < this.size) && (
-                                    null == this.canvasElemCell && (this.canvasElemCell = new CreateCanvasElem(this.i() / 2, "#FFFFFF", true, "#000000")),
+                                0 < this.id && (window || (!this.isVirus || this.isVirus || this.j) && 20 < this.size) && (
+                                    null == this.canvasElemCell &&
+                                    (this.canvasElemCell = new CreateCanvasElem(this.i() / 2, "#FFFFFF", true, "#000000")),
                                         canvasElem = this.canvasElemCell,
                                         canvasElem.setFontSize(this.i() / 1.6),
                                         canvasElem.setText(~~(this.size * this.size / 100)),
