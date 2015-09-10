@@ -14,11 +14,11 @@
         }
     ],
     "browser_action": {
-        "default_title": "AgarTime",
-        "default_popup": "popup.html"
+        "default_title": "AgarTime"
     },
     "permissions": ["activeTab"],
     "web_accessible_resources": [
+        "i18n.js",
         "client.js"
     ]
 }
