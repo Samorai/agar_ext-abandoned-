@@ -1461,19 +1461,23 @@ var host = 'agar.io';
                                 colored ? (canvasContext.fillStyle = "#FFFFFF", canvasContext.strokeStyle = "#AAAAAA") :
                                     (canvasContext.fillStyle = this.color, canvasContext.strokeStyle = this.color);
 
+                                realSize = function (size) {
+                                    return size * size / 100;
+                                };
+
                                 // set virus color
-                                //if(this.isVirus){
-                                //    var virusSize = realSize(this.size);
-                                //    if (virusSize > 120){
-                                //
-                                //    }
-                                //}
+                                if (this.isVirus) {
+                                    var virusSize = realSize(this.size);
+                                    if (virusSize > 170) {
+                                        canvasContext.fillStyle = '#FF4C00'
+                                        canvasContext.strokeStyle = '#FF4C00'
+                                    } else if (virusSize > 135){
+                                        canvasContext.fillStyle = '#FFBC00'
+                                        canvasContext.strokeStyle = '#FFBC00'
+                                    }
+                                }
                                 // set enemies colors
                                 if (this.id && 0 != myCells.length && (myCells.indexOf(this) == -1) && !this.isVirus && this.size > 30) {
-
-                                    realSize = function (size) {
-                                        return size * size / 100;
-                                    }
                                     var me = myCells[0];
                                     var mySize = realSize(me.size);
                                     if (myCells.length > 1) {
