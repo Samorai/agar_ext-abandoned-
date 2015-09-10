@@ -1,13 +1,13 @@
 var host = 'agar.io';
 
-(function(window, e) {
+(function (window, e) {
     function Kb() {
         Fa = true;
         info();
         setInterval(info, 18E4);
         Canvas = Ga = document.getElementById("canvas");
         f = Canvas.getContext("2d");
-        Canvas.onmousedown = function(a) {
+        Canvas.onmousedown = function (a) {
             if (db) {
                 var b = a.clientX - (5 + innerWidth / 5 / 2),
                     c = a.clientY - (5 + innerWidth / 5 / 2);
@@ -22,28 +22,29 @@ var host = 'agar.io';
             setCursorCoordinates();
             ba()
         };
-        Canvas.onmousemove = function(a) {
+        Canvas.onmousemove = function (a) {
             ma = 1 * a.clientX;
             na = 1 * a.clientY;
             setCursorCoordinates();
         };
-        Canvas.onmouseup = function() {};
+        Canvas.onmouseup = function () {
+        };
         /firefox/i.test(navigator.userAgent) ? document.addEventListener("DOMMouseScroll", zoom, false) : document.body.onmousewheel = zoom;
         var a = false,
             b = false,
             c = false;
-        window.onkeydown = function(n) {
+        window.onkeydown = function (n) {
             32 != n.keyCode || a || (ba(), sendKeyPress(17), a = true);
             81 != n.keyCode || b || (sendKeyPress(18), b = true);
             87 != n.keyCode || c || (ba(), sendKeyPress(21), c = true);
             27 == n.keyCode && oa(300)
         };
-        window.onkeyup = function(n) {
+        window.onkeyup = function (n) {
             32 == n.keyCode && (a = false);
             87 == n.keyCode && (c = false);
             81 == n.keyCode && b && (sendKeyPress(19), b = false)
         };
-        window.onblur = function() {
+        window.onblur = function () {
             sendKeyPress(19);
             c = b = a = false
         };
@@ -61,9 +62,11 @@ var host = 'agar.io';
 
     function zoom(a) {
         M *= Math.pow(.9, a.wheelDelta / -10 || a.detail || 0);
-        0.7 > M && (M = 0.7);
+        var minZoomSize = 0.7;
+        if (minZoomSize > M) {
+            M = minZoomSize
+        }
         M > 4 / g && (M = 4 / g)
-
     }
 
     function Lb() {
@@ -94,12 +97,12 @@ var host = 'agar.io';
     }
 
     function info() {
-        null == sa && (sa = {}, e("#region").children().each(function() {
+        null == sa && (sa = {}, e("#region").children().each(function () {
             var a = e(this),
                 b = a.val();
             b && (sa[b] = a.text())
         }));
-        e.get("http://m." + host + "/info", function(a) {
+        e.get("http://m." + host + "/info", function (a) {
             var b = {},
                 c;
             for (c in a.regions) {
@@ -141,8 +144,8 @@ var host = 'agar.io';
     }
 
     function lb(a) {
-        window.googletag && window.googletag.cmd.push(function() {
-            Ja && (Ja = false, setTimeout(function() {
+        window.googletag && window.googletag.cmd.push(function () {
+            Ja && (Ja = false, setTimeout(function () {
                 Ja = true
             }, 6E4 * Nb), window.googletag && window.googletag.pubads && window.googletag.pubads().refresh && window.googletag.pubads().refresh(a))
         })
@@ -162,10 +165,10 @@ var host = 'agar.io';
         console.log("Find " + y + V);
         //e.ajax('http://'+host+'/findServer.php', {
         e.ajax('http://m.' + host + '/findServer', {
-            error: function() {
+            error: function () {
                 setTimeout(connectSocket, 1E3)
             },
-            success: function(b) {
+            success: function (b) {
                 a == Ia && (b.alert && alert(b.alert), Ka("ws://" + b.ip, b.token))
             },
             dataType: "json",
@@ -187,13 +190,14 @@ var host = 'agar.io';
             websocket.onclose = null;
             try {
                 websocket.close()
-            } catch (c) {}
+            } catch (c) {
+            }
             websocket = null
         }
         La.ip && (a = "ws://" + La.ip);
         if (null != N) {
             var n = N;
-            N = function() {
+            N = function () {
                 n(b)
             }
         }
@@ -213,7 +217,7 @@ var host = 'agar.io';
         console.log("Connecting to " + a);
         websocket = new WebSocket(a);
         websocket.binaryType = "arraybuffer";
-        websocket.onopen = function() {
+        websocket.onopen = function () {
             var a;
             console.log("socket open");
             a = getDataView(5);
@@ -232,7 +236,7 @@ var host = 'agar.io';
         };
         websocket.onmessage = Ob;
         websocket.onclose = Pb;
-        websocket.onerror = function() {
+        websocket.onerror = function () {
             console.log("socket error")
         }
     }
@@ -258,7 +262,7 @@ var host = 'agar.io';
 
     function Qb(a) {
         function b() {
-            for (var b = "";;) {
+            for (var b = ""; ;) {
                 var window = a.getUint16(c, true);
                 c += 2;
                 if (0 == window) break;
@@ -341,7 +345,7 @@ var host = 'agar.io';
                     c = c + 4,
                     l = a.getUint32(c, true),
                     c = c + 4;
-                setTimeout(function() {
+                setTimeout(function () {
                     X({
                         window: f,
                         e: k,
@@ -353,7 +357,7 @@ var host = 'agar.io';
 
     function Rb(a, b) {
         function c() {
-            for (var c = "";;) {
+            for (var c = ""; ;) {
                 var window = a.getUint16(b, true);
                 b += 2;
                 if (0 == window) break;
@@ -363,7 +367,7 @@ var host = 'agar.io';
         }
 
         function n() {
-            for (var c = "";;) {
+            for (var c = ""; ;) {
                 var window = a.getUint8(b++);
                 if (0 == window) break;
                 c += String.fromCharCode(window)
@@ -392,7 +396,7 @@ var host = 'agar.io';
                     updateStats(Cell, Target)
             )
         }
-        for (f = 0;;) {
+        for (f = 0; ;) {
             p = a.getUint32(b, true);
             b += 4;
             if (0 == p) break;
@@ -424,7 +428,8 @@ var host = 'agar.io';
             m.K = E;
             m.T = R;
             m.V = websocket;
-            s && m.t(s); - 1 != myCellsIds.indexOf(p) && -1 == myCells.indexOf(m) && (myCells.push(m), 1 == myCells.length && (t = m.x, u = m.y, rb(), document.getElementById("overlays").style.display = "none", x = [], foodEaten = 0, Ra = myCells[0].color, Sa = true, sb = Date.now(), S = cellsEaten = Ua = 0))
+            s && m.t(s);
+            -1 != myCellsIds.indexOf(p) && -1 == myCells.indexOf(m) && (myCells.push(m), 1 == myCells.length && (t = m.x, u = m.y, rb(), document.getElementById("overlays").style.display = "none", x = [], foodEaten = 0, Ra = myCells[0].color, Sa = true, sb = Date.now(), S = cellsEaten = Ua = 0))
         }
         C = a.getUint32(b, true);
         b += 4;
@@ -438,7 +443,7 @@ var host = 'agar.io';
         vb();
         N && (N(), N = null);
         null != Va && clearTimeout(Va);
-        Va = setTimeout(function() {
+        Va = setTimeout(function () {
             window.ga && (++wb, window.ga("set", "dimension2", wb))
         }, 1E4)
     }
@@ -539,7 +544,7 @@ var host = 'agar.io';
         setCursorCoordinates();
         Wa || f.clearRect(0, 0, innerWidth, innerHeight);
         Wa ? (f.fillStyle = darkTheme ? "#111111" : "#F2FBFF", f.globalAlpha = .05, f.fillRect(0, 0, innerWidth, innerHeight), f.globalAlpha = 1) : Yb();
-        v.sort(function(a, b) {
+        v.sort(function (a, b) {
             return a.size == b.size ? a.id - b.id : a.size - b.size
         });
         f.save();
@@ -707,27 +712,27 @@ var host = 'agar.io';
                 e: c,
                 c: c,
                 window: n
-            }, function() {
+            }, function () {
                 e(".agario-profile-panel .progress-bar-star").text(a.window);
                 e(".agario-exp-bar .progress-bar").css("width",
                     "100%");
-                e(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function() {
+                e(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function () {
                     e(".progress-bar-star").removeClass("animated tada")
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     e(".agario-exp-bar .progress-bar-text").text(a.c + "/" + a.c + " XP");
                     X({
                         e: 0,
                         c: a.c,
                         window: a.window
-                    }, function() {
+                    }, function () {
                         X(a, b)
                     })
                 }, 1E3)
             });
             else {
                 var f = Date.now(),
-                    g = function() {
+                    g = function () {
                         var c;
                         c = (Date.now() - f) / 1E3;
                         c = 0 > c ? 0 : 1 < c ? 1 : c;
@@ -770,18 +775,18 @@ var host = 'agar.io';
         if ("connected" == a.status) {
             var b = a.authResponse.accessToken;
             console.log(b);
-            window.FB.api("/me/picture?width=180&height=180", function(a) {
+            window.FB.api("/me/picture?width=180&height=180", function (a) {
                 window.localStorage.fbPictureCache = a.data.url;
                 e(".agario-profile-picture").attr("src",
                     a.data.url)
             });
             e("#helloContainer").attr("data-logged-in", "1");
             null != D ? e.ajax(da + "checkToken", {
-                error: function() {
+                error: function () {
                     D = null;
                     Za(a)
                 },
-                success: function(a) {
+                success: function (a) {
                     a = a.split("\n");
                     X({
                         window: +a[0],
@@ -795,7 +800,7 @@ var host = 'agar.io';
                 crossDomain: true,
                 data: D
             }) : e.ajax(da + "facebookLogin", {
-                error: function() {
+                error: function () {
                     D = null;
                     e("#helloContainer").attr("data-logged-in", "0")
                 },
@@ -816,10 +821,10 @@ var host = 'agar.io';
         a = decodeURIComponent(a).replace(/.*#/gim, "");
         $a("#" + window.encodeURIComponent(a));
         e.ajax(da + "getToken", {
-            error: function() {
+            error: function () {
                 e("#helloContainer").attr("data-party-state", "6")
             },
-            success: function(b) {
+            success: function (b) {
                 b = b.split("\n");
                 e(".partyToken").val(host + "/#" + window.encodeURIComponent(a));
                 e("#helloContainer").attr("data-party-state", "5");
@@ -886,7 +891,7 @@ var host = 'agar.io';
                 b.moveTo(0, a - x[0] / window * (a - 10) + 10);
                 for (p = 1; p < x.length; p += Math.max(~~(x.length / c), 1)) {
                     for (var f = p / (x.length - 1) * c, g = [], k = -20; 20 >= k; ++k) 0 > p + k || p + k >= x.length || g.push(x[p + k]);
-                    g = g.reduce(function(a, b) {
+                    g = g.reduce(function (a, b) {
                             return a + b
                         }) / g.length / window;
                     b.lineTo(f, a - g * (a - 10) + 10)
@@ -911,13 +916,13 @@ var host = 'agar.io';
             var userAgent = window.navigator.userAgent;
             if (-1 != userAgent.indexOf("Android"))
                 window.ga && window.ga("send", "event", "MobileRedirect", "PlayStore"),
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location.href = "https://play.google.com/store/apps/details?id=com.miniclip." + host
                     }, 1E3);
 
             else if (-1 != userAgent.indexOf("iPhone") || -1 != userAgent.indexOf("iPad") || -1 != userAgent.indexOf("iPod"))
                 window.ga && window.ga("send", "event", "MobileRedirect", "AppStore"),
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location.href = "https://itunes.apple.com/app/" + host + "/id995999703?mt=8&at=1l3vajp"
                     }, 1E3);
 
@@ -976,7 +981,7 @@ var host = 'agar.io';
                     ea = false,
                     Ia = 0,
                     La = {};
-                (function() {
+                (function () {
                     var a = window.location.search;
                     "?" == a.charAt(0) && (a = a.slice(1));
                     for (var a = a.split("&"), b = 0; b < a.length; b++) {
@@ -997,7 +1002,7 @@ var host = 'agar.io';
                     alert("You browser does not support this game, we recommend you to use Firefox to play this");
                 else {
                     var sa = null;
-                    window.setNick = function(a) {
+                    window.setNick = function (a) {
                         window.ga && window.ga("send", "event", "Nick", a.toLowerCase());
                         jb();
                         G = a;
@@ -1005,37 +1010,38 @@ var host = 'agar.io';
                         O = 0
                     };
                     window.setRegion = pa;
-                    window.setSkins = function(a) {
+                    window.setSkins = function (a) {
                         skins = a
                     };
-                    window.setNames = function(a) {
+                    window.setNames = function (a) {
                         showNames = a
                     };
-                    window.setDarkTheme = function(a) {
+                    window.setDarkTheme = function (a) {
                         darkTheme = a
                     };
-                    window.setColors = function(a) {
+                    window.setColors = function (a) {
                         colored = a
                     };
-                    window.setShowMass = function(a) {
+                    window.setShowMass = function (a) {
                         showMass = a
                     };
-                    window.spectate = function() {
+                    window.spectate = function () {
                         G = null;
                         sendKeyPress(1);
                         jb()
                     };
-                    window.setGameMode = function(a) {
+                    window.setGameMode = function (a) {
                         a != V && (":party" == V && e("#helloContainer").attr("data-party-state", "0"), fa(a), ":party" != a && L())
                     };
-                    window.setAcid = function(a) {
+                    window.setAcid = function (a) {
                         Wa = a
                     };
                     null != window.localStorage && (null == window.localStorage.AB9 && (window.localStorage.AB9 = 0 + ~~(100 * Math.random())), Hb = +window.localStorage.AB9, window.ABGroup = Hb);
-                    e.get(ab + "//gc.agar.io", function(a) {
+                    e.get(ab + "//gc.agar.io", function (a) {
                             var b = a.split(" ");
                             a = b[0];
-                            b = b[1] || ""; - 1 == ["UA"].indexOf(a) && Jb.push("ussr");
+                            b = b[1] || "";
+                            -1 == ["UA"].indexOf(a) && Jb.push("ussr");
                             la.hasOwnProperty(a) && ("string" == typeof la[a] ? y || pa(la[a]) : la[a].hasOwnProperty(b) && (y || pa(la[a][b])))
                         },
                         "text");
@@ -1297,10 +1303,10 @@ var host = 'agar.io';
                         A = null,
                         F = 1,
                         Ba = null,
-                        gb = function() {
+                        gb = function () {
                             var a = Date.now(),
                                 b = 1E3 / 60;
-                            return function() {
+                            return function () {
                                 window.requestAnimationFrame(gb);
                                 var c = Date.now(),
                                     e = c - a;
@@ -1342,7 +1348,7 @@ var host = 'agar.io';
                         L: true,
                         S: 0,
                         V: null,
-                        R: function() {
+                        R: function () {
                             var a;
                             for (a = 0; a < v.length; a++)
                                 if (v[a] == this) {
@@ -1350,18 +1356,20 @@ var host = 'agar.io';
                                     break
                                 }
                             delete H[this.id];
-                            a = myCells.indexOf(this); - 1 != a && (Pa = true, myCells.splice(a, 1));
-                            a = myCellsIds.indexOf(this.id); - 1 != a && myCellsIds.splice(a, 1);
+                            a = myCells.indexOf(this);
+                            -1 != a && (Pa = true, myCells.splice(a, 1));
+                            a = myCellsIds.indexOf(this.id);
+                            -1 != a && myCellsIds.splice(a, 1);
                             this.A = true;
                             0 < this.S && W.push(this)
                         },
-                        i: function() {
+                        i: function () {
                             return Math.max(~~(.3 * this.size), 24)
                         },
-                        t: function(a) {
+                        t: function (a) {
                             if (this.name = a) null == this.canvasElem ? this.canvasElem = new CreateCanvasElem(this.i(), "#FFFFFF", true, "#000000") : this.canvasElem.setFontSize(this.i()), this.canvasElem.setText(this.name)
                         },
-                        doStrangeThing: function() {
+                        doStrangeThing: function () {
                             for (var a = this.B(); this.a.length > a;) {
                                 var b = ~~(Math.random() * this.a.length);
                                 this.a.splice(b, 1)
@@ -1369,7 +1377,7 @@ var host = 'agar.io';
                             for (0 == this.a.length && 0 < a && this.a.push(new Ya(this, this.x, this.y, this.size, Math.random() - .5)); this.a.length < a;) b = ~~(Math.random() * this.a.length), b = this.a[b], this.a.push(new Ya(this,
                                 b.x, b.y, b.g, b.b))
                         },
-                        B: function() {
+                        B: function () {
                             var a = 10;
                             20 > this.size && (a = 0);
                             this.isVirus && (a = 30);
@@ -1379,14 +1387,15 @@ var host = 'agar.io';
                             this.T & 32 && (b *= .25);
                             return ~~Math.max(b, a)
                         },
-                        da: function() {
+                        da: function () {
                             this.doStrangeThing();
                             for (var a = this.a, b = a.length, c = 0; c < b; ++c) {
                                 var window = a[(c - 1 + b) % b].b,
                                     e = a[(c + 1) % b].b;
                                 a[c].b += (Math.random() - .5) * (this.j ? 3 : 1);
                                 a[c].b *= .7;
-                                10 < a[c].b && (a[c].b = 10); - 10 > a[c].b && (a[c].b = -10);
+                                10 < a[c].b && (a[c].b = 10);
+                                -10 > a[c].b && (a[c].b = -10);
                                 a[c].b = (window + e + 8 * a[c].b) / 10
                             }
                             for (var f = this, h = this.isVirus ? 0 : (this.id / 1E3 + E / 1E4) % (2 * Math.PI), c = 0; c < b; ++c) {
@@ -1398,7 +1407,7 @@ var host = 'agar.io';
                                     var l = false,
                                         m = a[c].x,
                                         I = a[c].y;
-                                    ca.ea(m - 5, I - 5, 10, 10, function(a) {
+                                    ca.ea(m - 5, I - 5, 10, 10, function (a) {
                                         a.P != f && 25 > (m - a.x) * (m - a.x) + (I - a.y) * (I - a.y) && (l = true)
                                     });
                                     !l && (a[c].x < wa || a[c].y < xa || a[c].x > ya || a[c].y > za) && (l = true);
@@ -1415,7 +1424,7 @@ var host = 'agar.io';
                                 a[c].y = this.y + Math.sin(window * c + h) * e
                             }
                         },
-                        J: function() {
+                        J: function () {
                             if (0 >= this.id) return 1;
                             var a;
                             a = (E - this.K) / 120;
@@ -1423,17 +1432,18 @@ var host = 'agar.io';
                             var b = 0 > a ? 0 : 1 < a ? 1 : a;
                             this.i();
                             if (this.A && 1 <= b) {
-                                var c = W.indexOf(this); - 1 != c && W.splice(c, 1)
+                                var c = W.indexOf(this);
+                                -1 != c && W.splice(c, 1)
                             }
                             this.x = a * (this.C - this.o) + this.o;
                             this.y = a * (this.D - this.p) + this.p;
                             this.size = b * (this.m - this.n) + this.n;
                             return b
                         },
-                        H: function() {
+                        H: function () {
                             return 0 >= this.id ? true : this.x + this.size + 40 < t - innerWidth / 2 / g || this.y + this.size + 40 < u - innerHeight / 2 / g || this.x - this.size - 40 > t + innerWidth / 2 / g || this.y - this.size - 40 > u + innerHeight / 2 / g ? false : true
                         },
-                        s: function(canvasContext) {
+                        s: function (canvasContext) {
                             if (this.H()) {
                                 ++this.S;
                                 var b = 0 < this.id && !this.isVirus && !this.j && .4 > g;
@@ -1453,7 +1463,7 @@ var host = 'agar.io';
                                 // set enemies colors
                                 if (this.id && 0 != myCells.length && (myCells.indexOf(this) == -1) && !this.isVirus && this.size > 30) {
 
-                                    realSize = function(size) {
+                                    realSize = function (size) {
                                         return size * size / 100;
                                     }
                                     var me = myCells[0];
@@ -1534,8 +1544,8 @@ var host = 'agar.io';
                                     b += e.height / 2 / c + 4
                                 }
 
-                                // write cell weight
-                                0 < this.id && showMass && (window || (!this.isVirus || this.j) && 20 < this.size) && (
+                                // write cell and virus weight
+                                0 < this.id && showMass && (window || (this.isVirus || this.j) && 20 < this.size) && (
                                     null == this.canvasElemCell && (this.canvasElemCell = new CreateCanvasElem(this.i() / 2, "#FFFFFF", true, "#000000")),
                                         canvasElem = this.canvasElemCell,
                                         canvasElem.setFontSize(this.i() / 1.6),
@@ -1560,19 +1570,19 @@ var host = 'agar.io';
                         N: null,
                         rewriteCanvas: false,
                         scale: 1,
-                        setFontSize: function(a) {
+                        setFontSize: function (a) {
                             this.fontSize != a && (this.fontSize = a, this.rewriteCanvas = true)
                         },
-                        setScale: function(a) {
+                        setScale: function (a) {
                             this.scale != a && (this.scale = a, this.rewriteCanvas = true)
                         },
-                        setStrokeColor: function(a) {
+                        setStrokeColor: function (a) {
                             this.strokeStyle != a && (this.strokeStyle = a, this.rewriteCanvas = true)
                         },
-                        setText: function(a) {
+                        setText: function (a) {
                             a != this.text && (this.text = a, this.rewriteCanvas = true)
                         },
-                        makeCanvas: function() {
+                        makeCanvas: function () {
                             null == this.canvas && (
                                 this.canvas = document.createElement("canvas"),
                                     this.N = this.canvas.getContext("2d")
@@ -1601,20 +1611,20 @@ var host = 'agar.io';
                             return this.canvas
                         }
                     };
-                    Date.now || (Date.now = function() {
+                    Date.now || (Date.now = function () {
                         return (new Date).getTime()
                     });
-                    (function() {
+                    (function () {
                         for (var a = ["ms", "moz", "webkit", "o"], b =
                             0; b < a.length && !window.requestAnimationFrame; ++b) window.requestAnimationFrame = window[a[b] + "RequestAnimationFrame"], window.cancelAnimationFrame = window[a[b] + "CancelAnimationFrame"] || window[a[b] + "CancelRequestAnimationFrame"];
-                        window.requestAnimationFrame || (window.requestAnimationFrame = function(a) {
+                        window.requestAnimationFrame || (window.requestAnimationFrame = function (a) {
                             return setTimeout(a, 1E3 / 60)
-                        }, window.cancelAnimationFrame = function(a) {
+                        }, window.cancelAnimationFrame = function (a) {
                             clearTimeout(a)
                         })
                     })();
                     var Mb = {
-                            X: function(a) {
+                            X: function (a) {
                                 function b(a) {
                                     a < window && (a = window);
                                     a > f && (a = f);
@@ -1635,11 +1645,11 @@ var host = 'agar.io';
                                     l = ~~((g - e) / 32) + 1,
                                     m = Array(k * l);
                                 return {
-                                    Y: function(a) {
+                                    Y: function (a) {
                                         var window = b(a.x) + c(a.y) * k;
                                         null == m[window] ? m[window] = a : Array.isArray(m[window]) ? m[window].push(a) : m[window] = [m[window], a]
                                     },
-                                    ea: function(a, window, e, f, g) {
+                                    ea: function (a, window, e, f, g) {
                                         var n = b(a),
                                             p = c(window);
                                         a = b(a + e);
@@ -1655,13 +1665,13 @@ var host = 'agar.io';
                                 }
                             }
                         },
-                        rb = function() {
+                        rb = function () {
                             var a = new CellObject(0, 0, 0, 32, "#ED1C24", ""),
                                 b = document.createElement("canvas");
                             b.width = 32;
                             b.height = 32;
                             var c = b.getContext("2d");
-                            return function() {
+                            return function () {
                                 0 < myCells.length && (a.color = myCells[0].color, a.t(myCells[0].name));
                                 c.clearRect(0, 0, 32, 32);
                                 c.save();
@@ -1675,20 +1685,20 @@ var host = 'agar.io';
                                 window.parentNode.replaceChild(e, window)
                             }
                         }();
-                    e(function() {
+                    e(function () {
                         rb()
                     });
                     var T = "loginCache3";
-                    e(function() {
+                    e(function () {
                         +window.localStorage.wannaLogin && (window.localStorage[T] && Db(window.localStorage[T]), window.localStorage.fbPictureCache && e(".agario-profile-picture").attr("src", window.localStorage.fbPictureCache))
                     });
-                    window.facebookLogin = function() {
+                    window.facebookLogin = function () {
                         window.localStorage.wannaLogin = 1
                     };
-                    window.fbAsyncInit = function() {
+                    window.fbAsyncInit = function () {
                         function a() {
                             window.localStorage.wannaLogin = 1;
-                            null == window.FB ? alert("You seem to have something blocking Facebook on your browser, please check for any extensions") : window.FB.login(function(a) {
+                            null == window.FB ? alert("You seem to have something blocking Facebook on your browser, please check for any extensions") : window.FB.login(function (a) {
                                 Za(a)
                             }, {
                                 scope: "public_profile, email"
@@ -1702,13 +1712,13 @@ var host = 'agar.io';
                             status: true,
                             version: "v2.2"
                         });
-                        window.FB.Event.subscribe("auth.statusChange", function(b) {
+                        window.FB.Event.subscribe("auth.statusChange", function (b) {
                             +window.localStorage.wannaLogin && ("connected" == b.status ? Za(b) : a())
                         });
                         window.facebookLogin =
                             a
                     };
-                    window.logout = function() {
+                    window.logout = function () {
                         D = null;
                         e("#helloContainer").attr("data-logged-in", "0");
                         e("#helloContainer").attr("data-has-account-data", "0");
@@ -1717,7 +1727,7 @@ var host = 'agar.io';
                         delete window.localStorage.fbPictureCache;
                         L()
                     };
-                    var dc = function() {
+                    var dc = function () {
                         function a(a, b, c, size, e) {
                             var f = b.getContext("2d"),
                                 g = b.width;
@@ -1742,8 +1752,8 @@ var host = 'agar.io';
                         l.getContext("2d");
                         l.width = l.height = 70;
                         a(c, l, "", 26, "#ebc0de");
-                        return function() {
-                            e(".cell-spinner").filter(":visible").each(function() {
+                        return function () {
+                            e(".cell-spinner").filter(":visible").each(function () {
                                 var c = e(this),
                                     window = Date.now(),
                                     f = this.width,
@@ -1758,7 +1768,7 @@ var host = 'agar.io';
                                 (c = c.attr("data-itr")) && (c = ga(c));
                                 a(b, this, c || "", +e(this).attr("data-size"), "#5bc0de")
                             });
-                            e("#statsPellets").filter(":visible").each(function() {
+                            e("#statsPellets").filter(":visible").each(function () {
                                 e(this);
                                 var b = this.width,
                                     c = this.height;
@@ -1767,9 +1777,9 @@ var host = 'agar.io';
                             })
                         }
                     }();
-                    window.createParty = function() {
+                    window.createParty = function () {
                         fa(":party");
-                        N = function(a) {
+                        N = function (a) {
                             $a("/#" + window.encodeURIComponent(a));
                             e(".partyToken").val(host + "/#" + window.encodeURIComponent(a));
                             e("#helloContainer").attr("data-party-state", "1")
@@ -1777,7 +1787,7 @@ var host = 'agar.io';
                         L()
                     };
                     window.joinParty = ib;
-                    window.cancelParty = function() {
+                    window.cancelParty = function () {
                         $a("/");
                         e("#helloContainer").attr("data-party-state", "0");
                         fa("");
@@ -1794,23 +1804,23 @@ var host = 'agar.io';
                         cellsEaten = 0,
                         S = 0,
                         skipStats = true;
-                    setInterval(function() {
+                    setInterval(function () {
                         Sa && x.push(Bb() / 100)
                     }, 1E3 / 60);
-                    setInterval(function() {
+                    setInterval(function () {
                         var a = cc();
                         0 != a && (++Ua, 0 == S && (S = a), S = Math.min(S, a))
                     }, 1E3);
-                    window.closeStats = function() {
+                    window.closeStats = function () {
                         U = false;
                         e("#stats").hide();
                         kb(window.ab);
                         oa(0)
                     };
-                    window.setSkipStats = function(a) {
+                    window.setSkipStats = function (a) {
                         skipStats = !a
                     };
-                    e(function() {
+                    e(function () {
                         e(Kb)
                     })
                 }
