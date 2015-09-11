@@ -781,7 +781,7 @@ var host = 'agar.io';
                     a.data.url)
             });
             e("#helloContainer").attr("data-logged-in", "1");
-            null != D ? e.ajax(da + "checkToken", {
+            null != D ? e.ajax("http://m.agar.io/checkToken", {
                 error: function () {
                     D = null;
                     Za(a)
@@ -820,9 +820,10 @@ var host = 'agar.io';
             "4");
         a = decodeURIComponent(a).replace(/.*#/gim, "");
         $a("#" + window.encodeURIComponent(a));
-        e.ajax(da + "getToken", {
+        e.ajax("http://m.agar.io/getToken", {
             error: function () {
                 e("#helloContainer").attr("data-party-state", "6")
+
             },
             success: function (b) {
                 b = b.split("\n");
