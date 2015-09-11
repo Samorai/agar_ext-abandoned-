@@ -1489,7 +1489,7 @@ var host = 'agar.io';
                                         }
                                     }
                                     var enemySize = realSize(this.size);
-                                    var multiplier = 1.28;
+                                    var multiplier = 1.29;
 
                                     if (mySize >= enemySize) {
                                         // you can split twice
