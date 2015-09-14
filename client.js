@@ -93,7 +93,7 @@ var host = 'agar.io';
 
     function setCursorCoordinates() {
         cursorX = (ma - innerWidth / 2) / g + t;
-        cursorY = (na - innerHeight / 2) / g + u
+        cursorY = (na - innerHeight / 2) / g + u;
     }
 
     function info() {
@@ -799,7 +799,7 @@ var host = 'agar.io';
                 cache: false,
                 crossDomain: true,
                 data: D
-            }) : e.ajax(da + "facebookLogin", {
+            }) : e.ajax("http://m.agar.io/facebookLogin", {
                 error: function () {
                     D = null;
                     e("#helloContainer").attr("data-logged-in", "0")
@@ -1490,7 +1490,7 @@ var host = 'agar.io';
                                         }
                                     }
                                     var enemySize = realSize(this.size);
-                                    var multiplier = 1.29;
+                                    var multiplier = 1.30;
 
                                     if (mySize >= enemySize) {
                                         // you can split twice
