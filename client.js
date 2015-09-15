@@ -1556,7 +1556,7 @@ var host = 'agar.io';
                                 if (0 != this.id && (showNames || window) && this.name && this.canvasElem && (null == e || -1 == ec.indexOf(c))) {
                                     e = this.canvasElem;
                                     e.setText(this.name);
-                                    e.setFontSize(this.i());
+                                    e.setFontSize(this.i() * 2);
                                     c = 0 >= this.id ? 1 : Math.ceil(10 * g) / 10;
                                     e.setScale(c);
                                     var e = e.makeCanvas(),
@@ -1571,7 +1571,7 @@ var host = 'agar.io';
                                     null == this.canvasElemCell &&
                                     (this.canvasElemCell = new CreateCanvasElem(this.i() / 2, "#FFFFFF", true, "#000000")),
                                         canvasElem = this.canvasElemCell,
-                                        canvasElem.setFontSize(this.i() / 0.5), // increment virus font size
+                                        canvasElem.setFontSize(this.i() / (this.isVirus ? 0.5 : 1.4)), // increment virus font size
                                         canvasElem.setText(~~(this.size * this.size / 100)),
                                         c = Math.ceil(10 * g) / 10, canvasElem.setScale(c),
                                         e = canvasElem.makeCanvas(),
