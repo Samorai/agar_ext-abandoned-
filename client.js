@@ -572,8 +572,8 @@ var host = 'agar.io';
         O = Math.max(O, Bb());
         var coord = '';
         var coords = {
-            x: parseInt(myCells[0].x),
-            y: parseInt(myCells[0].y)
+            x: myCells.length > 0 ? parseInt(myCells[0].x) : 0,
+            y: myCells.length > 0 ? parseInt(myCells[0].y) : 0
         };
         var plotSize = {
             width: 7000,
@@ -1505,40 +1505,47 @@ var host = 'agar.io';
 
                                     var multiplier = 1.33;
 
-                                    if (mySize >= enemySize) {
-                                        // you can split twice
-                                        if ((mySize / 4) > (enemySize * multiplier)) {
-                                            canvasContext.fillStyle = '#4c4cff';
-                                        }
-                                        // you can split
-                                        else if ((mySize / 2) > (enemySize * multiplier)) {
-                                            canvasContext.fillStyle = '#7FFF00';
-                                        }
-                                        // you can eat
-                                        else if (mySize > (enemySize * multiplier)) {
-                                            canvasContext.fillStyle = '#006400';
-                                        }
-                                        // equal
-                                        else {
-                                            canvasContext.fillStyle = '#9E9E9E';
-                                        }
+                                    if(this.name.match(/[bw]|[BW]/) ){
+                                        canvasContext.fillStyle = '#FF00FF';
+                                        canvasContext.strokeStyle = '#FF00FF';
                                     } else {
-                                        // can split to you twice
-                                        if ((enemySize / 4) > (mySize * multiplier)) {
-                                            canvasContext.fillStyle = '#000000';
-                                        }
-                                        //// can split to you
-                                        else if ((enemySize / 2) > (mySize * multiplier)) {
-                                            canvasContext.fillStyle = '#ff0000';
-                                        }
-                                        // can eat you
-                                        else if (enemySize > (mySize * multiplier)) {
-                                            canvasContext.fillStyle = '#FBC02D';
+                                        if (mySize >= enemySize) {
+                                            // you can split twice
+                                            if ((mySize / 4) > (enemySize * multiplier)) {
+                                                canvasContext.fillStyle = '#4c4cff';
+                                            }
+                                            // you can split
+                                            else if ((mySize / 2) > (enemySize * multiplier)) {
+                                                canvasContext.fillStyle = '#7FFF00';
+                                            }
+                                            // you can eat
+                                            else if (mySize > (enemySize * multiplier)) {
+                                                canvasContext.fillStyle = '#006400';
+                                            }
                                             // equal
+                                            else {
+                                                canvasContext.fillStyle = '#9E9E9E';
+                                            }
                                         } else {
-                                            canvasContext.fillStyle = '#9E9E9E';
+                                            // can split to you twice
+                                            if ((enemySize / 4) > (mySize * multiplier)) {
+                                                canvasContext.fillStyle = '#000000';
+                                            }
+                                            //// can split to you
+                                            else if ((enemySize / 2) > (mySize * multiplier)) {
+                                                canvasContext.fillStyle = '#ff0000';
+                                            }
+                                            // can eat you
+                                            else if (enemySize > (mySize * multiplier)) {
+                                                canvasContext.fillStyle = '#FBC02D';
+                                                // equal
+                                            } else {
+                                                canvasContext.fillStyle = '#9E9E9E';
+                                            }
                                         }
                                     }
+
+
                                 }
 
 
