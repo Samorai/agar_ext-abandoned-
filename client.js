@@ -211,7 +211,7 @@ var host = 'agar.io';
         v = [];
         W = [];
         w = [];
-        A = B = null;
+        $canvas = B = null;
         O = 0;
         ha = false;
         console.log("Connecting to " + a);
@@ -568,11 +568,23 @@ var host = 'agar.io';
             f.restore()
         }
         f.restore();
-        A && A.width && f.drawImage(A, innerWidth - A.width - 10, 10);
+        $canvas && $canvas.width && f.drawImage($canvas, innerWidth - $canvas.width - 10, 10);
         O = Math.max(O, Bb());
         var coord = '';
+        var coords = {
+            x: parseInt(myCells[0].x),
+            y: parseInt(myCells[0].y)
+        };
+        var plotSize = {
+            width: 7000,
+            height: 7000
+        };
+
+        coords.x = 100 * (coords.x + plotSize.width) / (2 * plotSize.width);
+        coords.y = 100 * (coords.y + plotSize.height) / (2 * plotSize.height);
+
         if (myCells.length > 0) {
-            coord = " x: " + parseInt(myCells[0].x) + " y: " + parseInt(myCells[0].y)
+            coord = " x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
         }
         0 != O && (null == Ba && (Ba = new CreateCanvasElem(24, "#FFFFFF")),
             Ba.setText(ga("score") + " : " + ~~(O / 100) + coord),
@@ -623,16 +635,16 @@ var host = 'agar.io';
     }
 
     function pb() {
-        A = null;
+        $canvas = null;
         if (null != B || 0 != w.length)
             if (null != B || showNames) {
-                A = document.createElement("canvas");
-                var a = A.getContext("2d"),
+                $canvas = document.createElement("canvas");
+                var a = $canvas.getContext("2d"),
                     b = 60,
                     b = null == B ? b + 24 * w.length : b + 180,
                     c = Math.min(200, .3 * innerWidth) / 200;
-                A.width = 200 * c;
-                A.height = b * c;
+                $canvas.width = 200 * c;
+                $canvas.height = b * c;
                 a.scale(c, c);
                 a.globalAlpha = .4;
                 a.fillStyle = "#000000";
@@ -1301,7 +1313,7 @@ var host = 'agar.io';
                         wb = 0,
                         xb = -1,
                         yb = -1,
-                        A = null,
+                        $canvas = null,
                         F = 1,
                         Ba = null,
                         gb = function () {
@@ -1490,7 +1502,7 @@ var host = 'agar.io';
                                         }
                                     }
                                     var enemySize = realSize(this.size);
-                                    var multiplier = 1.30;
+                                    var multiplier = 1.32;
 
                                     if (mySize >= enemySize) {
                                         // you can split twice
