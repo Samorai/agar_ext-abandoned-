@@ -1490,12 +1490,12 @@ var host = 'agar.io';
                                         }
                                     }
                                     var enemySize = realSize(this.size);
-                                    var multiplier = 1.30;
+                                    var multiplier = 1.33;
 
                                     if (mySize >= enemySize) {
                                         // you can split twice
                                         if ((mySize / 4) > (enemySize * multiplier)) {
-                                            canvasContext.fillStyle = '#ffffaa';
+                                            canvasContext.fillStyle = '#4c4cff';
                                         }
                                         // you can split
                                         else if ((mySize / 2) > (enemySize * multiplier)) {
@@ -1571,7 +1571,7 @@ var host = 'agar.io';
                                     null == this.canvasElemCell &&
                                     (this.canvasElemCell = new CreateCanvasElem(this.i() / 2, "#FFFFFF", true, "#000000")),
                                         canvasElem = this.canvasElemCell,
-                                        canvasElem.setFontSize(this.i() / (this.isVirus ? 0.5 : 1.4)), // increment virus font size
+                                        canvasElem.setFontSize(this.i() / 0.5), // increment virus font size
                                         canvasElem.setText(~~(this.size * this.size / 100)),
                                         c = Math.ceil(10 * g) / 10, canvasElem.setScale(c),
                                         e = canvasElem.makeCanvas(),
