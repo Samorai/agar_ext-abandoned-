@@ -1502,12 +1502,13 @@ var host = 'agar.io';
                                         }
                                     }
                                     var enemySize = realSize(this.size);
-                                    var multiplier = 1.32;
+
+                                    var multiplier = 1.33;
 
                                     if (mySize >= enemySize) {
                                         // you can split twice
                                         if ((mySize / 4) > (enemySize * multiplier)) {
-                                            canvasContext.fillStyle = '#ffffaa';
+                                            canvasContext.fillStyle = '#4c4cff';
                                         }
                                         // you can split
                                         else if ((mySize / 2) > (enemySize * multiplier)) {
@@ -1568,7 +1569,7 @@ var host = 'agar.io';
                                 if (0 != this.id && (showNames || window) && this.name && this.canvasElem && (null == e || -1 == ec.indexOf(c))) {
                                     e = this.canvasElem;
                                     e.setText(this.name);
-                                    e.setFontSize(this.i());
+                                    e.setFontSize(this.i() * 2);
                                     c = 0 >= this.id ? 1 : Math.ceil(10 * g) / 10;
                                     e.setScale(c);
                                     var e = e.makeCanvas(),
