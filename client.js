@@ -1591,7 +1591,7 @@ var host = 'agar.io';
                                     null == this.canvasElemCell &&
                                     (this.canvasElemCell = new CreateCanvasElem(this.i() / 2, "#FFFFFF", true, "#000000")),
                                         canvasElem = this.canvasElemCell,
-                                        canvasElem.setFontSize(this.i() / (this.isVirus ? 0.5 : 1.4)), // increment virus font size
+                                        canvasElem.setFontSize(this.i() / (this.isVirus ? 0.5 : 1)), // increment virus font size
                                         canvasElem.setText(~~(this.size * this.size / 100)),
                                         c = Math.ceil(10 * g) / 10, canvasElem.setScale(c),
                                         e = canvasElem.makeCanvas(),
