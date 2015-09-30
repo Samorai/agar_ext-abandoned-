@@ -1505,7 +1505,7 @@ var host = 'agar.io';
 
                                     var multiplier = 1.33;
 
-                                    if(this.name.match(/\[bw\]|\[BW\]/) ){
+                                    if(this.name.match(/[\{\[]ВW[\}\]]/) ){
                                         canvasContext.fillStyle = '#FF00FF';
                                         canvasContext.strokeStyle = '#FF00FF';
                                     } else {
