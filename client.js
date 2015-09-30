@@ -6,7 +6,7 @@ var host = 'agar.io';
         info();
         setInterval(info, 18E4);
         Canvas = Ga = document.getElementById("canvas");
-        f = Canvas.getContext("2d");
+        CanvasContext2d = Canvas.getContext("2d");
         Canvas.onmousedown = function (a) {
             if (db) {
                 var b = a.clientX - (5 + innerWidth / 5 / 2),
@@ -17,14 +17,14 @@ var host = 'agar.io';
                     return
                 }
             }
-            ma = 1 * a.clientX;
-            na = 1 * a.clientY;
+            cursorClientX = 1 * a.clientX;
+            cursorClientY = 1 * a.clientY;
             setCursorCoordinates();
             ba()
         };
         Canvas.onmousemove = function (a) {
-            ma = 1 * a.clientX;
-            na = 1 * a.clientY;
+            cursorClientX = 1 * a.clientX;
+            cursorClientY = 1 * a.clientY;
             setCursorCoordinates();
         };
         Canvas.onmouseup = function () {
@@ -92,8 +92,18 @@ var host = 'agar.io';
     }
 
     function setCursorCoordinates() {
-        cursorX = (ma - innerWidth / 2) / g + t;
-        cursorY = (na - innerHeight / 2) / g + u;
+        cursorX = (cursorClientX - innerWidth / 2) / g + t;
+        cursorY = (cursorClientY - innerHeight / 2) / g + u;
+    }
+
+    function drawAim(x, y){
+        var ctx = CanvasContext2d
+        ctx.beginPath();
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.moveTo(x, y);
+        ctx.lineTo(cursorX, cursorY);
+        ctx.stroke();
     }
 
     function info() {
@@ -450,8 +460,8 @@ var host = 'agar.io';
 
     function ba() {
         if (socketIsOpen()) {
-            var a = ma - innerWidth / 2,
-                b = na - innerHeight / 2;
+            var a = cursorClientX - innerWidth / 2,
+                b = cursorClientY - innerHeight / 2;
 
             64 > a * a + b * b || .01 > Math.abs(xb - cursorX) && .01 > Math.abs(yb - cursorY) || (
                 xb = cursorX,
@@ -542,33 +552,37 @@ var host = 'agar.io';
         } else t = (29 * t + ia) / 30, u = (29 * u + ja) / 30, g = (9 * g + ka * Ab()) / 10;
         Lb();
         setCursorCoordinates();
-        Wa || f.clearRect(0, 0, innerWidth, innerHeight);
-        Wa ? (f.fillStyle = darkTheme ? "#111111" : "#F2FBFF", f.globalAlpha = .05, f.fillRect(0, 0, innerWidth, innerHeight), f.globalAlpha = 1) : Yb();
+        Wa || CanvasContext2d.clearRect(0, 0, innerWidth, innerHeight);
+        Wa ? (CanvasContext2d.fillStyle = darkTheme ? "#111111" : "#F2FBFF", CanvasContext2d.globalAlpha = .05, CanvasContext2d.fillRect(0, 0, innerWidth, innerHeight), CanvasContext2d.globalAlpha = 1) : Yb();
         v.sort(function (a, b) {
             return a.size == b.size ? a.id - b.id : a.size - b.size
         });
-        f.save();
-        f.translate(innerWidth / 2, innerHeight / 2);
-        f.scale(g, g);
-        f.translate(-t, -u);
-        for (d = 0; d < W.length; d++) W[d].s(f);
-        for (d = 0; d < v.length; d++) v[d].s(f);
+        CanvasContext2d.save();
+        CanvasContext2d.translate(innerWidth / 2, innerHeight / 2);
+        CanvasContext2d.scale(g, g);
+        CanvasContext2d.translate(-t, -u);
+
+        for (d = 0; d < W.length; d++) W[d].s(CanvasContext2d);
+        for (d = 0; d < v.length; d++) v[d].s(CanvasContext2d);
         if (Oa) {
             ua = (3 * ua + Ma) / 4;
             va = (3 * va + Na) / 4;
-            f.save();
-            f.strokeStyle = "#FFAAAA";
-            f.lineWidth = 10;
-            f.lineCap = "round";
-            f.lineJoin = "round";
-            f.globalAlpha = .5;
-            f.beginPath();
-            for (d = 0; d < myCells.length; d++) f.moveTo(myCells[d].x, myCells[d].y), f.lineTo(ua, va);
-            f.stroke();
-            f.restore()
+            CanvasContext2d.save();
+            CanvasContext2d.strokeStyle = "#FFAAAA";
+            CanvasContext2d.lineWidth = 10;
+            CanvasContext2d.lineCap = "round";
+            CanvasContext2d.lineJoin = "round";
+            CanvasContext2d.globalAlpha = .5;
+            CanvasContext2d.beginPath();
+            for (d = 0; d < myCells.length; d++) {
+                CanvasContext2d.moveTo(myCells[d].x, myCells[d].y);
+                CanvasContext2d.lineTo(ua, va);
+            }
+            CanvasContext2d.stroke();
+            CanvasContext2d.restore()
         }
-        f.restore();
-        $canvas && $canvas.width && f.drawImage($canvas, innerWidth - $canvas.width - 10, 10);
+        CanvasContext2d.restore();
+        $canvas && $canvas.width && CanvasContext2d.drawImage($canvas, innerWidth - $canvas.width - 10, 10);
         O = Math.max(O, Bb());
         var coord = '';
         var coords = {
@@ -584,17 +598,17 @@ var host = 'agar.io';
         coords.y = 100 * (coords.y + plotSize.height) / (2 * plotSize.height);
 
         if (myCells.length > 0) {
-            coord = " x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
+            coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
         }
         0 != O && (null == Ba && (Ba = new CreateCanvasElem(24, "#FFFFFF")),
-            Ba.setText(ga("score") + " : " + ~~(O / 100) + coord),
+            Ba.setText(ga("score") + " : " + ~~(O / 100) + " | " + coord),
             c = Ba.makeCanvas(),
             a = c.width,
-            f.globalAlpha = .2,
-            f.fillStyle = "#000000",
-            f.fillRect(10, innerHeight - 10 - 24 - 10, a + 10, 34),
-            f.globalAlpha = 1,
-            f.drawImage(c, 15, innerHeight - 10 - 24 - 5));
+            CanvasContext2d.globalAlpha = .2,
+            CanvasContext2d.fillStyle = "#000000",
+            CanvasContext2d.fillRect(10, innerHeight - 10 - 24 - 10, a + 10, 34),
+            CanvasContext2d.globalAlpha = 1,
+            CanvasContext2d.drawImage(c, 15, innerHeight - 10 - 24 - 5));
         Zb();
         b = Date.now() - b;
         b > 1E3 / 60 ? F -= .01 :
@@ -603,29 +617,29 @@ var host = 'agar.io';
         1 < F && (F = 1);
         b = E - Cb;
         !socketIsOpen() || ea || U ? (s += b / 2E3, 1 < s && (s = 1)) : (s -= b / 300, 0 > s && (s = 0));
-        0 < s && (f.fillStyle = "#000000", f.globalAlpha = .5 * s, f.fillRect(0, 0, innerWidth, innerHeight), f.globalAlpha = 1);
+        0 < s && (CanvasContext2d.fillStyle = "#000000", CanvasContext2d.globalAlpha = .5 * s, CanvasContext2d.fillRect(0, 0, innerWidth, innerHeight), CanvasContext2d.globalAlpha = 1);
         Cb = E
     }
 
     function Yb() {
-        f.fillStyle = darkTheme ? "#ff0000" : "#F2FBFF";
-        f.fillRect(0, 0, innerWidth, innerHeight);
-        f.save();
-        f.strokeStyle = darkTheme ? "#AAAAAA" : "#000000";
-        f.globalAlpha = .2 * g;
-        for (var a = innerWidth / g, b = innerHeight / g, c = (-t + a / 2) % 50; c < a; c += 50) f.beginPath(), f.moveTo(c * g - .5, 0), f.lineTo(c * g - .5, b * g), f.stroke();
+        CanvasContext2d.fillStyle = darkTheme ? "#ff0000" : "#F2FBFF";
+        CanvasContext2d.fillRect(0, 0, innerWidth, innerHeight);
+        CanvasContext2d.save();
+        CanvasContext2d.strokeStyle = darkTheme ? "#AAAAAA" : "#000000";
+        CanvasContext2d.globalAlpha = .2 * g;
+        for (var a = innerWidth / g, b = innerHeight / g, c = (-t + a / 2) % 50; c < a; c += 50) CanvasContext2d.beginPath(), CanvasContext2d.moveTo(c * g - .5, 0), CanvasContext2d.lineTo(c * g - .5, b * g), CanvasContext2d.stroke();
         for (c = (-u + b / 2) % 50; c < b; c += 50)
-            f.beginPath(),
-                f.moveTo(0, c * g - .5),
-                f.lineTo(a * g, c * g - .5),
-                f.stroke();
-        f.restore()
+            CanvasContext2d.beginPath(),
+                CanvasContext2d.moveTo(0, c * g - .5),
+                CanvasContext2d.lineTo(a * g, c * g - .5),
+                CanvasContext2d.stroke();
+        CanvasContext2d.restore()
     }
 
     function Zb() {
         if (db && Xa.width) {
             var a = innerWidth / 5;
-            f.drawImage(Xa, 5, 5, a, a)
+            CanvasContext2d.drawImage(Xa, 5, 5, a, a)
         }
     }
 
@@ -940,7 +954,7 @@ var host = 'agar.io';
                     }, 1E3);
 
             else {
-                var Ga, f, Canvas, innerWidth, innerHeight,
+                var Ga, CanvasContext2d, Canvas, innerWidth, innerHeight,
                     ca = null,
                     websocket = null,
                     t = 0,
@@ -951,8 +965,8 @@ var host = 'agar.io';
                     v = [],
                     W = [],
                     w = [],
-                    ma = 0,
-                    na = 0,
+                    cursorClientX = 0,
+                    cursorClientY = 0,
                     cursorX = -1,
                     cursorY = -1,
                     Xb = 0,
@@ -1474,7 +1488,7 @@ var host = 'agar.io';
                                 colored ? (canvasContext.fillStyle = "#FFFFFF", canvasContext.strokeStyle = "#AAAAAA") :
                                     (canvasContext.fillStyle = this.color, canvasContext.strokeStyle = this.color);
 
-                                realSize = function (size) {
+                                var realSize = function (size) {
                                     return size * size / 100;
                                 };
 
@@ -1484,7 +1498,7 @@ var host = 'agar.io';
                                     if (virusSize > 170) {
                                         canvasContext.fillStyle = '#FF4C00'
                                         canvasContext.strokeStyle = '#FF4C00'
-                                    } else if (virusSize > 135){
+                                    } else if (virusSize > 135) {
                                         canvasContext.fillStyle = '#FFBC00'
                                         canvasContext.strokeStyle = '#FFBC00'
                                     }
@@ -1505,7 +1519,7 @@ var host = 'agar.io';
 
                                     var multiplier = 1.33;
 
-                                    if(this.name.match(/\[bw\]|\[BW\]/) ){
+                                    if (this.name.match(/\[bw\]|\[BW\]/)) {
                                         canvasContext.fillStyle = '#FF00FF';
                                         canvasContext.strokeStyle = '#FF00FF';
                                     } else {
@@ -1599,7 +1613,11 @@ var host = 'agar.io';
                                         l = ~~(e.height / c),
                                         canvasContext.drawImage(e, ~~this.x - ~~(f / 2), b - ~~(l / 2), f, l)
                                 );
-                                canvasContext.restore()
+                                canvasContext.restore();
+
+                                if(this.id && 0 != myCells.length && (myCells.indexOf(this) != -1)){
+                                    drawAim(this.x, this.y)
+                                }
                             }
                         }
                     };
@@ -1771,17 +1789,17 @@ var host = 'agar.io';
                         L()
                     };
                     var dc = function () {
-                        function a(a, b, c, size, e) {
-                            var f = b.getContext("2d"),
-                                g = b.width;
-                            b = b.height;
+                        function a(a, canvas, c, size, e) {
+                            var ctx = canvas.getContext("2d"),
+                                g = canvas.width;
+                            canvas = canvas.height;
                             a.color = e;
                             a.t(c);
                             a.size = size;
-                            f.save();
-                            f.translate(g / 2, b / 2);
-                            a.s(f);
-                            f.restore()
+                            ctx.save();
+                            ctx.translate(g / 2, canvas / 2);
+                            a.s(ctx);
+                            ctx.restore()
                         }
 
                         for (var b = new CellObject(-1, 0, 0, 32, "#5bc0de", ""), c = new CellObject(-1, 0, 0, 32, "#5bc0de", ""), window = "#0791ff #5a07ff #ff07fe #ffa507 #ff0774 #077fff #3aff07 #ff07ed #07a8ff #ff076e #3fff07 #ff0734 #07ff20 #ff07a2 #ff8207 #07ff0e".split(" "),
