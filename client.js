@@ -58,6 +58,8 @@ var host = 'agar.io';
         oa(0);
         fb();
         window.location.hash && 6 <= window.location.hash.length && ib(window.location.hash)
+        document.getElementById('nick').value = '[ВW] ';
+        e('#options span[data-itr="option_no_skins"]').prev('input').attr('checked', true);
     }
 
     function zoom(a) {
@@ -958,14 +960,14 @@ var host = 'agar.io';
                     Xb = 0,
                     E = 0,
                     Cb = 0,
-                    G = null,
+                    G = '[ВW]',
                     wa = 0,
                     xa = 0,
                     ya = 1E4,
                     za = 1E4,
                     g = 1,
                     y = null,
-                    skins = true,
+                    skins = false,
                     showNames = true,
                     colored = false,
                     Pa = false,
@@ -1380,7 +1382,14 @@ var host = 'agar.io';
                             return Math.max(~~(.3 * this.size), 24)
                         },
                         t: function (a) {
-                            if (this.name = a) null == this.canvasElem ? this.canvasElem = new CreateCanvasElem(this.i(), "#FFFFFF", true, "#000000") : this.canvasElem.setFontSize(this.i()), this.canvasElem.setText(this.name)
+                            if (this.name = a) {
+                                if (null == this.canvasElem) {
+                                    this.canvasElem = new CreateCanvasElem(this.i(), "#FFFFFF", true, "#000000")
+                                } else {
+                                  this.canvasElem.setFontSize(this.i());
+                                  this.canvasElem.setText(this.name);
+                                }
+                            }
                         },
                         doStrangeThing: function () {
                             for (var a = this.B(); this.a.length > a;) {
