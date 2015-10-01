@@ -98,13 +98,33 @@ var host = 'agar.io';
         cursorY = (cursorClientY - innerHeight / 2) / g + u;
     }
 
-    function drawAim(x, y){
-        var ctx = CanvasContext2d
+    function drawAim(x, y, size) {
+        var ctx = CanvasContext2d;
         ctx.beginPath();
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
+
+        var coef = 100 / size;
+        if(coef < 0.3){
+            coef = 0.3;
+        }
+        var radius = size * 7.8 * coef;
+
+        var hypotenuse = Math.sqrt(Math.pow(cursorX - x, 2) + Math.pow(cursorY - y, 2));
+        var k = radius / hypotenuse;
+        var moveToX = k * (cursorX - x) + x,
+            moveToY = k * (cursorY - y) + y;
+
         ctx.moveTo(x, y);
-        ctx.lineTo(cursorX, cursorY);
+        ctx.lineTo(moveToX, moveToY);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = "rgba(255, 255, 255, 0)";
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#003300';
         ctx.stroke();
     }
 
@@ -1400,8 +1420,8 @@ var host = 'agar.io';
                                 if (null == this.canvasElem) {
                                     this.canvasElem = new CreateCanvasElem(this.i(), "#FFFFFF", true, "#000000")
                                 } else {
-                                  this.canvasElem.setFontSize(this.i());
-                                  this.canvasElem.setText(this.name);
+                                    this.canvasElem.setFontSize(this.i());
+                                    this.canvasElem.setText(this.name);
                                 }
                             }
                         },
@@ -1528,7 +1548,7 @@ var host = 'agar.io';
 
                                     var multiplier = 1.33;
 
-                                    if(this.name.match(/[\{\[]ВW[\}\]]/) ){
+                                    if (this.name.match(/[\{\[]ВW[\}\]]/)) {
                                         canvasContext.fillStyle = '#FF00FF';
                                         canvasContext.strokeStyle = '#FF00FF';
                                     } else {
@@ -1624,8 +1644,8 @@ var host = 'agar.io';
                                 );
                                 canvasContext.restore();
 
-                                if(this.id && 0 != myCells.length && (myCells.indexOf(this) != -1)){
-                                    drawAim(this.x, this.y)
+                                if (this.id && 0 != myCells.length && (myCells.indexOf(this) != -1)) {
+                                    drawAim(this.x, this.y, this.size)
                                 }
                             }
                         }
