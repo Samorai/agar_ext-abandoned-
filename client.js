@@ -101,8 +101,8 @@ var host = 'agar.io';
     function drawAim(x, y, size) {
         var ctx = CanvasContext2d;
         ctx.beginPath();
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(255,0,0,.03)";
+        ctx.lineWidth = 3;
 
         var coef = 100 / size;
         if(coef < 0.3){
@@ -121,10 +121,10 @@ var host = 'agar.io';
 
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "rgba(255, 255, 255, 0)";
+        ctx.fillStyle = "rgba(255,98,37, 0.05)";
         ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#003300';
+        // ctx.lineWidth = 2;
+        // ctx.strokeStyle = '#003300';
         ctx.stroke();
     }
 
