@@ -141,9 +141,9 @@ var host = 'agar.io';
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = "rgba(255, 98, 37, 0.05)";
-        ctx.lineWidth = 1;
+        //ctx.lineWidth = 1;
         ctx.fill();
-        ctx.stroke();
+        //ctx.stroke();
     }
 
     function info() {
@@ -1602,17 +1602,17 @@ var host = 'agar.io';
                                         } else {
                                             // can split to you twice
                                             if ((enemySize / 4) > (mySize * multiplier)) {
-                                                canvasContext.fillStyle = '#000000';
                                                 if(distanceToEnemy < safeDistance * 2) {
                                                     drawEnemyAim(this.x, this.y, this.size, '#000000', 2);
                                                 }
+                                                canvasContext.fillStyle = '#000000';
                                             }
                                             //// can split to you
                                             else if ((enemySize / 2) > (mySize * multiplier)) {
-                                                canvasContext.fillStyle = '#ff0000';
                                                 if(distanceToEnemy < safeDistance) {
                                                     drawEnemyAim(this.x, this.y, this.size, '#ff0000');
                                                 }
+                                                canvasContext.fillStyle = '#ff0000';
                                             }
                                             // can eat you
                                             else if (enemySize > (mySize * multiplier)) {
