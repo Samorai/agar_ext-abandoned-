@@ -98,6 +98,14 @@ var host = 'agar.io';
         cursorY = (cursorClientY - innerHeight / 2) / g + u;
     }
 
+    function getShootRange(size) {
+        var coef = 100 / size;
+        if(coef < 0.3){
+            coef = 0.3;
+        }
+        return size * 7.8 * coef;
+    }
+
     function drawAim(x, y, size) {
         var ctx = CanvasContext2d;
         ctx.beginPath();
@@ -121,10 +129,37 @@ var host = 'agar.io';
 
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "rgba(255,98,37, 0.05)";
+        ctx.fillStyle = "rgba(98, 255, 37, 0.05)";
         ctx.fill();
         // ctx.lineWidth = 2;
         // ctx.strokeStyle = '#003300';
+        ctx.stroke();
+    }
+
+    function drawEnemyAim(x, y, size, color) {
+        var ctx = CanvasContext2d;
+        ctx.beginPath();
+        ctx.strokeStyle = color || "rgba(255, 0, 0, 1)";
+        ctx.lineWidth = 3;
+
+        var coef = 100 / size;
+        if(coef < 0.3){
+            coef = 0.3;
+        }
+        var radius = size * 7.8 * coef;
+
+        var hypotenuse = Math.sqrt(Math.pow(cursorX - x, 2) + Math.pow(cursorY - y, 2));
+        var k = radius / hypotenuse;
+        var moveToX = k * (cursorX - x) + x,
+            moveToY = k * (cursorY - y) + y;
+
+        ctx.moveTo(x, y);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = "rgba(255, 98, 37, 0.05)";
+        ctx.fill();
         ctx.stroke();
     }
 
@@ -1546,6 +1581,10 @@ var host = 'agar.io';
                                     }
                                     var enemySize = realSize(this.size);
 
+                                    var distanceToEnemy = Math.sqrt(Math.pow(this.x - me.x, 2) + Math.pow(this.y - me.y, 2));
+                                    var enemyShootRange = getShootRange(this.size);
+                                    var safeDistance = enemyShootRange * 1.1;
+
                                     var multiplier = 1.34;
 
                                     if (this.name.match(/[\{\[]ВW[\}\]]/)) {
@@ -1573,10 +1612,16 @@ var host = 'agar.io';
                                             // can split to you twice
                                             if ((enemySize / 4) > (mySize * multiplier)) {
                                                 canvasContext.fillStyle = '#000000';
+                                                if(distanceToEnemy < safeDistance * 2) {
+                                                    drawEnemyAim(this.x, this.y, this.size, canvasContext.fillStyle);
+                                                }
                                             }
                                             //// can split to you
                                             else if ((enemySize / 2) > (mySize * multiplier)) {
                                                 canvasContext.fillStyle = '#ff0000';
+                                                if(distanceToEnemy < safeDistance) {
+                                                    drawEnemyAim(this.x, this.y, this.size, canvasContext.fillStyle);
+                                                }
                                             }
                                             // can eat you
                                             else if (enemySize > (mySize * multiplier)) {
