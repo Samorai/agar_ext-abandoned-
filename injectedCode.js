@@ -28,7 +28,8 @@ if (window.location.href.indexOf('/agar.io/') + 1) {
         document.replaceChild(newPage, document.documentElement);
         var s;
         var scripts = [
-            chrome.extension.getURL('client.js')
+            chrome.extension.getURL('client.js'),
+            'http://www.parsecdn.com/js/parse-latest.js',
         ];
         for (i = 0; i < scripts.length; ++i) {
             s = document.createElement('SCRIPT');
