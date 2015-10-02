@@ -1571,9 +1571,17 @@ var host = 'agar.io';
                                 if (this.id && 0 != myCells.length && (myCells.indexOf(this) == -1) && !this.isVirus && this.size > 30) {
                                     var me = myCells[0];
                                     var mySize = realSize(me.size);
+                                    var myRealSizes = myCells.map(function(me) {
+                                        return realSize(me.size);
+                                    });
+                                    var myTotalSize = myRealSizes.reduce(function(previousValue, currentValue, index, array) {
+                                        return previousValue + currentValue;
+                                    });;
+                                    var ignoredSizeMedium = myTotalSize/40; // Ignore 2.5% of mass
+
                                     if (myCells.length > 1) {
                                         for (var z = 0; z < myCells.length; z++) {
-                                            if (myCells[z].size < mySize) {
+                                            if (myCells[z].size < mySize && myCells[z].size > ignoredSizeMedium) {
                                                 me = myCells[z];
                                                 mySize = realSize(me.size);
                                             }
