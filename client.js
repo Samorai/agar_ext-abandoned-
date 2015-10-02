@@ -1546,7 +1546,7 @@ var host = 'agar.io';
                                     }
                                     var enemySize = realSize(this.size);
 
-                                    var multiplier = 1.33;
+                                    var multiplier = 1.34;
 
                                     if (this.name.match(/[\{\[]ВW[\}\]]/)) {
                                         canvasContext.fillStyle = '#FF00FF';
