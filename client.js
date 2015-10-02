@@ -112,11 +112,7 @@ var host = 'agar.io';
         ctx.strokeStyle = "rgba(255,0,0,.03)";
         ctx.lineWidth = 3;
 
-        var coef = 100 / size;
-        if(coef < 0.3){
-            coef = 0.3;
-        }
-        var radius = size * 7.8 * coef;
+        var radius = getShootRange(size);
 
         var hypotenuse = Math.sqrt(Math.pow(cursorX - x, 2) + Math.pow(cursorY - y, 2));
         var k = radius / hypotenuse;
@@ -136,29 +132,16 @@ var host = 'agar.io';
         ctx.stroke();
     }
 
-    function drawEnemyAim(x, y, size, color) {
+    function drawEnemyAim(x, y, size, color, range_multiplexor) {
+        range_multiplexor = range_multiplexor || 1;
         var ctx = CanvasContext2d;
-        ctx.beginPath();
-        ctx.strokeStyle = color || "rgba(255, 0, 0, 1)";
-        ctx.lineWidth = 3;
 
-        var coef = 100 / size;
-        if(coef < 0.3){
-            coef = 0.3;
-        }
-        var radius = size * 7.8 * coef;
-
-        var hypotenuse = Math.sqrt(Math.pow(cursorX - x, 2) + Math.pow(cursorY - y, 2));
-        var k = radius / hypotenuse;
-        var moveToX = k * (cursorX - x) + x,
-            moveToY = k * (cursorY - y) + y;
-
-        ctx.moveTo(x, y);
-        ctx.stroke();
+        var radius = getShootRange(size) * range_multiplexor;
 
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = "rgba(255, 98, 37, 0.05)";
+        ctx.lineWidth = 1;
         ctx.fill();
         ctx.stroke();
     }
@@ -1621,14 +1604,14 @@ var host = 'agar.io';
                                             if ((enemySize / 4) > (mySize * multiplier)) {
                                                 canvasContext.fillStyle = '#000000';
                                                 if(distanceToEnemy < safeDistance * 2) {
-                                                    drawEnemyAim(this.x, this.y, this.size, canvasContext.fillStyle);
+                                                    drawEnemyAim(this.x, this.y, this.size, '#000000', 2);
                                                 }
                                             }
                                             //// can split to you
                                             else if ((enemySize / 2) > (mySize * multiplier)) {
                                                 canvasContext.fillStyle = '#ff0000';
                                                 if(distanceToEnemy < safeDistance) {
-                                                    drawEnemyAim(this.x, this.y, this.size, canvasContext.fillStyle);
+                                                    drawEnemyAim(this.x, this.y, this.size, '#ff0000');
                                                 }
                                             }
                                             // can eat you
