@@ -171,10 +171,14 @@ var host = 'agar.io';
         });
     }, 3000);
 
+    function realSize (size) {
+        return size * size / 100;
+    }
+
     function drawAim(x, y, size) {
         var ctx = CanvasContext2d;
         ctx.beginPath();
-        ctx.strokeStyle = "rgba(255,0,0,.03)";
+        ctx.strokeStyle = "rgba(255,0,0,.1)";
         ctx.lineWidth = 3;
 
         var radius = getShootRange(size);
@@ -209,6 +213,109 @@ var host = 'agar.io';
         //ctx.lineWidth = 1;
         ctx.fill();
         //ctx.stroke();
+    }
+
+    function setVirusStyle (size, context) {
+        var virusSize = realSize(size);
+        if (virusSize > 170) {
+            context.fillStyle = '#FF4C00';
+            context.strokeStyle = '#FF4C00';
+        } else if (virusSize > 135) {
+            context.fillStyle = '#FFBC00';
+            context.strokeStyle = '#FFBC00';
+        }
+    }
+
+    function setEnemyStyle (mySize, enemySize, multiplier, context) {
+        var fillStyle = null;
+        if (mySize >= enemySize) {
+            // you can split twice
+            if ((mySize / 4) > (enemySize * multiplier)) {
+                fillStyle = '#4c4cff';
+            }
+            // you can split
+            else if ((mySize / 2) > (enemySize * multiplier)) {
+                fillStyle = '#7FFF00';
+            }
+            // you can eat
+            else if (mySize > (enemySize * multiplier)) {
+                fillStyle = '#006400';
+            }
+            // equal
+            else {
+                fillStyle = '#9E9E9E';
+            }
+        } else {
+            // can split to you twice
+            if ((enemySize / 4) > (mySize * multiplier)) {
+                fillStyle = '#000000';
+            }
+            //// can split to you
+            else if ((enemySize / 2) > (mySize * multiplier)) {
+                fillStyle = '#ff0000';
+            }
+            // can eat you
+            else if (enemySize > (mySize * multiplier)) {
+                fillStyle = '#FBC02D';
+            } else { // equal
+                fillStyle = '#9E9E9E';
+            }
+        }
+        context.fillStyle = fillStyle;
+    }
+    function setClanStyle (context) {
+        context.fillStyle = '#FF00FF';
+        context.strokeStyle = '#FF00FF';
+    }
+
+    function additionals (myCells, context, self) {
+        var me = myCells[0];
+        var mySize = realSize(me.size);
+        var myRealSizes = myCells.map(function(me) {
+            return realSize(me.size);
+        });
+        var myTotalSize = myRealSizes.reduce(function(previousValue, currentValue, index, array) {
+            return previousValue + currentValue;
+        });
+        var ignoredSizeMedium = myTotalSize/40; // Ignore 2.5% of mass
+
+        if (myCells.length > 1) {
+            for (var z = 0; z < myCells.length; z++) {
+                if (myCells[z].size < mySize && myCells[z].size > ignoredSizeMedium) {
+                    me = myCells[z];
+                    mySize = realSize(me.size);
+                }
+            }
+        }
+        var enemySize = realSize(self.size);
+
+        var distanceToEnemy = Math.sqrt(Math.pow(self.x - me.x, 2) + Math.pow(self.y - me.y, 2));
+        var enemyShootRange = getShootRange(self.size);
+        var safeDistance = enemyShootRange * 1.1;
+
+        var multiplier = 1.34;
+
+        var enemyJumpMultiplier = 0;
+
+        if (self.name.match(/[\{\[]ВW[\}\]]/)) {
+            setClanStyle (context);
+        } else {
+            setEnemyStyle (mySize, enemySize, multiplier, context);
+
+            if ((enemySize / 4) > (mySize * multiplier)) {
+                enemyJumpMultiplier = 2;
+            }
+            //// can split to you
+            if ((enemySize / 2) > (mySize * multiplier)) {
+                enemyJumpMultiplier = 1;
+            }
+
+            if (enemyJumpMultiplier && distanceToEnemy < (safeDistance * enemyJumpMultiplier)) {
+                var fillStyle = context.fillStyle;
+                drawEnemyAim(self.x, self.y, self.size, context, enemyJumpMultiplier);
+                context.fillStyle = fillStyle;
+            }
+        }
     }
 
     function info() {
@@ -1600,105 +1707,28 @@ var host = 'agar.io';
                                 this.W = E;
                                 c = this.J();
                                 this.A && (canvasContext.globalAlpha *= 1 - c);
+
                                 canvasContext.lineWidth = 10;
                                 canvasContext.lineCap = "round";
                                 canvasContext.lineJoin = this.isVirus ? "miter" : "round";
-                                colored ? (canvasContext.fillStyle = "#FFFFFF", canvasContext.strokeStyle = "#AAAAAA") :
-                                    (canvasContext.fillStyle = this.color, canvasContext.strokeStyle = this.color);
 
-                                var realSize = function (size) {
-                                    return size * size / 100;
-                                };
+                                if (colored) {
+                                    canvasContext.fillStyle = "#FFFFFF";
+                                    canvasContext.strokeStyle = "#AAAAAA";
+                                } else {
+                                    canvasContext.fillStyle = this.color;
+                                    canvasContext.strokeStyle = this.color;
+                                }
 
                                 // set virus color
                                 if (this.isVirus) {
-                                    var virusSize = realSize(this.size);
-                                    if (virusSize > 170) {
-                                        canvasContext.fillStyle = '#FF4C00'
-                                        canvasContext.strokeStyle = '#FF4C00'
-                                    } else if (virusSize > 135) {
-                                        canvasContext.fillStyle = '#FFBC00'
-                                        canvasContext.strokeStyle = '#FFBC00'
-                                    }
+                                    setVirusStyle(this.size, canvasContext);
                                 }
 
                                 // set enemies colors
                                 if (this.id && 0 != myCells.length && (myCells.indexOf(this) == -1) && !this.isVirus && this.size > 30) {
-                                    var me = myCells[0];
-                                    var mySize = realSize(me.size);
-                                    var myRealSizes = myCells.map(function(me) {
-                                        return realSize(me.size);
-                                    });
-                                    var myTotalSize = myRealSizes.reduce(function(previousValue, currentValue, index, array) {
-                                        return previousValue + currentValue;
-                                    });;
-                                    var ignoredSizeMedium = myTotalSize/40; // Ignore 2.5% of mass
-
-                                    if (myCells.length > 1) {
-                                        for (var z = 0; z < myCells.length; z++) {
-                                            if (myCells[z].size < mySize && myCells[z].size > ignoredSizeMedium) {
-                                                me = myCells[z];
-                                                mySize = realSize(me.size);
-                                            }
-                                        }
-                                    }
-                                    var enemySize = realSize(this.size);
-
-                                    var distanceToEnemy = Math.sqrt(Math.pow(this.x - me.x, 2) + Math.pow(this.y - me.y, 2));
-                                    var enemyShootRange = getShootRange(this.size);
-                                    var safeDistance = enemyShootRange * 1.1;
-
-                                    var multiplier = 1.34;
-
-                                    if (this.name.match(/[\{\[]ВW[\}\]]/)) {
-                                        canvasContext.fillStyle = '#FF00FF';
-                                        canvasContext.strokeStyle = '#FF00FF';
-                                    } else {
-                                        if (mySize >= enemySize) {
-                                            // you can split twice
-                                            if ((mySize / 4) > (enemySize * multiplier)) {
-                                                canvasContext.fillStyle = '#4c4cff';
-                                            }
-                                            // you can split
-                                            else if ((mySize / 2) > (enemySize * multiplier)) {
-                                                canvasContext.fillStyle = '#7FFF00';
-                                            }
-                                            // you can eat
-                                            else if (mySize > (enemySize * multiplier)) {
-                                                canvasContext.fillStyle = '#006400';
-                                            }
-                                            // equal
-                                            else {
-                                                canvasContext.fillStyle = '#9E9E9E';
-                                            }
-                                        } else {
-                                            // can split to you twice
-                                            if ((enemySize / 4) > (mySize * multiplier)) {
-                                                if(distanceToEnemy < safeDistance * 2) {
-                                                    drawEnemyAim(this.x, this.y, this.size, '#000000', 2);
-                                                }
-                                                canvasContext.fillStyle = '#000000';
-                                            }
-                                            //// can split to you
-                                            else if ((enemySize / 2) > (mySize * multiplier)) {
-                                                if(distanceToEnemy < safeDistance) {
-                                                    drawEnemyAim(this.x, this.y, this.size, '#ff0000');
-                                                }
-                                                canvasContext.fillStyle = '#ff0000';
-                                            }
-                                            // can eat you
-                                            else if (enemySize > (mySize * multiplier)) {
-                                                canvasContext.fillStyle = '#FBC02D';
-                                                // equal
-                                            } else {
-                                                canvasContext.fillStyle = '#9E9E9E';
-                                            }
-                                        }
-                                    }
-
-
+                                    additionals(myCells, canvasContext, this);
                                 }
-
 
                                 if (b) canvasContext.beginPath(), canvasContext.arc(this.x, this.y, this.size + 5, 0, 2 * Math.PI, false);
                                 else {
