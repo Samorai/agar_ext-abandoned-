@@ -109,7 +109,7 @@ var host = 'agar.io';
     function drawAim(x, y, size) {
         var ctx = CanvasContext2d;
         ctx.beginPath();
-        ctx.strokeStyle = "rgba(255,0,0,.03)";
+        ctx.strokeStyle = "rgba(255,0,0,.1)";
         ctx.lineWidth = 3;
 
         var radius = getShootRange(size);
