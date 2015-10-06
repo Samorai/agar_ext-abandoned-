@@ -903,13 +903,14 @@ var plotSize = {
 
         setCoordinates(coords.x, coords.y);
 
+
         if (myCells.length > 0) {
             // Write coordinates
             coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0);
             if(matesTotalSize != 0) {
                 coord += '| Team size: ' + matesTotalSize + ' ';
             }
-            for(mate_name in matesCoordinates) {
+            for(var mate_name in matesCoordinates) {
                 coord += "| " + mate_name + " X:" + matesCoordinates[mate_name].x + " Y:" + matesCoordinates[mate_name].y  + ' ';
             }
         }
