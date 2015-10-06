@@ -118,14 +118,18 @@ var plotSize = {
 
     // TODO this should run only when user is alive
     var parse_ready = false;
-    var myCoordinates = {};
+    var myCoordinates = {
+        x: 0,
+        y: 0
+    };
     var matesTotalSize = 0;
     var mySize = 0;
-    var matesCoordinates = {};
-    function setCoordinates(x, y) {
-        myCoordinates = {x: x, y: y};
+    var matesCoordinates = [];
+    function setCoordinates (x, y) {
+        myCoordinates.x = x;
+        myCoordinates.y = y;
     }
-    function setSize(size) {
+    function setSize (size) {
         mySize = size;
     }
     function getNick () {
@@ -153,6 +157,8 @@ var plotSize = {
         myCoordsQuery.find({
             success: function(results)
             {
+                var result;
+
                 if (results.length > 1) {
                     console.log("Multiple internal votes on object");
                     return;
@@ -183,6 +189,9 @@ var plotSize = {
                     result.set('size', mySize);
                     result.set('clan', myClan);
                     result.save();
+                    console.log('Update user');
+                    console.log(myCoordinates);
+
                 }
             }
         });
@@ -198,15 +207,23 @@ var plotSize = {
 
         teammateCoordsQuery.find({
             success: function(results) {
-                console.log('found mates: ' + results.length);
-                matesCoordinates = {};
+                matesCoordinates = [];
                 matesTotalSize = 0;
-                for (var i = 0; i < results.length; i++) {
-                    console.log('found mate: ' + results[i]);
-                    var mate = results[i];
-                    matesCoordinates[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
-                    matesTotalSize += Math.ceil(mate.get('size'));
-                }
+                results.forEach(function (mate) {
+                    matesCoordinates.push({
+                        name: mate.get('name'),
+                        size: mate.get('size'),
+                        coords: {
+                            x: mate.get('x'),
+                            y: mate.get('y')
+                        }
+                    });
+                });
+                matesTotalSize = 0;
+                matesCoordinates.forEach(function (item) {
+                    matesTotalSize += item.size;
+                });
+                matesTotalSize = Math.ceil(matesTotalSize);
             }
         });
     }, 2000);
@@ -257,12 +274,10 @@ var plotSize = {
         ctx.fill();
         ctx.stroke();
 
-        var mates = getValues(matesCoordinates).sort(function (a, b) {
+        var mates = matesCoordinates.sort(function (a, b) {
             return a.size > b.size
         }).slice(0, 3).map(function (item) {
-            var coords = convertCoordsToPosition(item);
-            item.x = coords.x;
-            item.y = coords.y;
+            item.coords = convertCoordsToPosition(item);
             return item;
         });
 
@@ -894,26 +909,27 @@ var plotSize = {
         $canvas && $canvas.width && CanvasContext2d.drawImage($canvas, innerWidth - $canvas.width - 10, 10);
         O = Math.max(O, Bb());
         var coord = '';
-        var coords = {
+        var pos = {
             x: myCells.length > 0 ? parseInt(myCells[0].x) : 0,
             y: myCells.length > 0 ? parseInt(myCells[0].y) : 0
         };
 
-        coords = convertPositionToCoords(coords);
-
-        setCoordinates(coords.x, coords.y);
-
+        setCoordinates(pos.x, pos.y);
 
         if (myCells.length > 0) {
             // Write coordinates
+            var coords = convertPositionToCoords(pos);
             coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0);
             if(matesTotalSize != 0) {
                 coord += '| Team size: ' + matesTotalSize + ' ';
             }
-            for(var mate_name in matesCoordinates) {
-                coord += "| " + mate_name + " X:" + matesCoordinates[mate_name].x + " Y:" + matesCoordinates[mate_name].y  + ' ';
-            }
+            var matesCoords = {};
+            matesCoordinates.forEach(function (item) {
+                matesCoords = convertPositionToCoords(item.coords);
+                coord += "| " + item.name + " X:" + matesCoords.x + " Y:" + matesCoords.y  + ' ';
+            });
         }
+
         0 != O && (null == Ba && (Ba = new CreateCanvasElem(24, "#FFFFFF")),
             Ba.setText(ga("score") + " : " + ~~(O / 100) + " | " + coord),
             c = Ba.makeCanvas(),
