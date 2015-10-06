@@ -190,8 +190,8 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
         teammateCoordsQuery.equalTo("alive", true);
         teammateCoordsQuery.limit(5);
 
-        var date = new Date();
-        teammateCoordsQuery.greaterThanOrEqualTo("updatedAt", new Date(date.getTime() - 1*60000)); // Less than a minute ago
+        //var date = new Date();
+        //teammateCoordsQuery.greaterThanOrEqualTo("updatedAt", new Date(date.getTime() - 1*60000)); // Less than a minute ago
 
         teammateCoordsQuery.find({
             success: function(results) {
@@ -268,7 +268,7 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
     }
     function drawFriendsDirections (coords, radius, myCoords, context) {
         (coords || []).forEach(function (player) {
-            console.log('draw', player);
+            //console.log('draw', player);
             drawFriendDirection(player, radius, myCoords, context);
         });
     }
