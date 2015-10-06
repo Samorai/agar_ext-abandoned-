@@ -61,7 +61,10 @@ var clanName = 'ВW';
         window.location.hash && 6 <= window.location.hash.length && ib(window.location.hash);
 
         // auto
-        document.getElementById('nick').value = '['+clanName+'] ';
+        document.getElementById('nick').value = '['+clanName+']';
+        if(localStorage.getItem('nickname')) {
+            document.getElementById('nick').value = localStorage.getItem('nickname');
+        }
         e('#options span[data-itr="option_no_skins"]').prev('input').attr('checked', true);
     }
 
@@ -112,8 +115,9 @@ var clanName = 'ВW';
     // TODO this should run only when user is alive
     var parse_ready = false;
     var myCoordinates = {};
+    var matesTotalSize = 0;
     var mySize = 0;
-    var matestCoordinates = {};
+    var matesCoordinates = {};
     function setCoordinates(x, y) {
         myCoordinates = {x: x, y: y};
     }
@@ -126,8 +130,9 @@ var clanName = 'ВW';
             Parse.initialize("8WGOIuLZPEK8dU1jlDE31hgVdGnC4tYlfwRsawOw", "lOiAGdw9gZnLstjyj75X4ZRcGUSgda7e5MIEIEFh");
         }
         var myNickname = document.getElementById('nick').value;
+        localStorage.setItem('nickname', myNickname);
         var myClanMatches = document.getElementById('nick').value.match(/(\[[^\]]*\])/i);
-        var myClan = myClanMatches[0] || clanName;
+        var myClan = myClanMatches && myClanMatches.length > 0 && myClanMatches[0] || clanName;
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
         var myRoom = window.location.hash.substring(1);
         var myCoordsQuery = new Parse.Query(TeammateCoords);
@@ -140,9 +145,9 @@ var clanName = 'ВW';
                 if ( results.length == 0 )
                 {
                     if(iAmAlive == false) {
+                        console.log('Not creating dead user');
                         return;
                     }
-
 
                     var myCoords = new TeammateCoords();
                     myCoords.set('name', myNickname);
@@ -183,18 +188,18 @@ var clanName = 'ВW';
         var date = new Date();
         teammateCoordsQuery.greaterThanOrEqualTo("updatedAt", new Date(date.getTime() - 1*60000)); // Less than a minute ago
 
-        // TODO add active/inactive filter (remove dead users)
-
         teammateCoordsQuery.find({
             success: function(results) {
-                matestCoordinates = {};
+                matesCoordinates = {};
+                matesTotalSize = 0;
                 for (var i = 0; i < results.length; i++) {
                     var mate = results[i];
-                    matestCoordinates[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
+                    matesCoordinates[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
+                    matesTotalSize += mate.get('size');
                 }
             }
         });
-    }, 3000);
+    }, 2000);
 
     function realSize (size) {
         return size * size / 100;
@@ -242,8 +247,7 @@ var clanName = 'ВW';
         ctx.fill();
         ctx.stroke();
 
-
-        drawFriendsDirections (getValues(matestCoordinates).sort(function (a, b) {
+        drawFriendsDirections (getValues(matesCoordinates).sort(function (a, b) {
             return a.size > b.size
         }).slice(0, 3), radius, my, ctx);
     }
@@ -877,8 +881,11 @@ var clanName = 'ВW';
         if (myCells.length > 0) {
             // Write coordinates
             coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
-            for(mate_name in matestCoordinates) {
-                coord += "| " + mate_name + " X:" + matestCoordinates[mate_name].x + " Y:" + matestCoordinates[mate_name].y;
+            if(matesTotalSize != 0) {
+                coord += '| Team size: ' + matesTotalSize;
+            }
+            for(mate_name in matesCoordinates) {
+                coord += "| " + mate_name + " X:" + matesCoordinates[mate_name].x + " Y:" + matesCoordinates[mate_name].y;
             }
         }
         0 != O && (null == Ba && (Ba = new CreateCanvasElem(24, "#FFFFFF")),
