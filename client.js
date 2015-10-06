@@ -182,8 +182,8 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
 
         var teammateCoordsQuery = new Parse.Query(TeammateCoords);
         teammateCoordsQuery.notEqualTo("name", myNickname);
-        teammateCoordsQuery.notEqualTo("room", myRoom);
-        teammateCoordsQuery.notEqualTo("alive", true);
+        teammateCoordsQuery.equalTo("room", myRoom);
+        teammateCoordsQuery.equalTo("alive", true);
         teammateCoordsQuery.limit(5);
 
         var date = new Date();
@@ -191,12 +191,14 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
 
         teammateCoordsQuery.find({
             success: function(results) {
+                console.log('found mates: ' + results.length);
                 matesCoordinates = {};
                 matesTotalSize = 0;
                 for (var i = 0; i < results.length; i++) {
+                    console.log('found mate: ' + results[i]);
                     var mate = results[i];
                     matesCoordinates[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
-                    matesTotalSize += mate.get('size');
+                    matesTotalSize += Math.ceil(mate.get('size'));
                 }
             }
         });
@@ -883,10 +885,10 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
             // Write coordinates
             coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
             if(matesTotalSize != 0) {
-                coord += '| Team size: ' + matesTotalSize;
+                coord += '| Team size: ' + matesTotalSize + ' ';
             }
             for(mate_name in matesCoordinates) {
-                coord += "| " + mate_name + " X:" + matesCoordinates[mate_name].x + " Y:" + matesCoordinates[mate_name].y;
+                coord += "| " + mate_name + " X:" + matesCoordinates[mate_name].x + " Y:" + matesCoordinates[mate_name].y  + ' ';
             }
         }
         0 != O && (null == Ba && (Ba = new CreateCanvasElem(24, "#FFFFFF")),
