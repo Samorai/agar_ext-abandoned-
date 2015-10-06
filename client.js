@@ -1,5 +1,6 @@
 var host = 'agar.io';
 var clanName = 'ВW';
+var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
 
 (function (window, e) {
     function Kb() {
@@ -171,7 +172,6 @@ var clanName = 'ВW';
                     result.set('size', mySize);
                     result.set('clan', myClan);
                     result.save();
-                    console.log('Updating user');
                 }
                 else
                 {
@@ -262,6 +262,7 @@ var clanName = 'ВW';
     }
     function drawFriendsDirections (coords, radius, myCoords, context) {
         (coords || []).forEach(function (player) {
+            console.log('draw', player);
             drawFriendDirection(player, radius, myCoords, context);
         });
     }
@@ -364,7 +365,7 @@ var clanName = 'ВW';
 
         var enemyJumpMultiplier = 0;
 
-        if (self.name.match(new RegExp('[\{\[]'+clanName+'[\}\]]'))) {
+        if (self.name.match(clanNameRegexp)) {
             setClanStyle (context);
         } else {
             setEnemyStyle (mySize, enemySize, multiplier, context);
@@ -1853,7 +1854,6 @@ var clanName = 'ВW';
                                 canvasContext.restore();
 
                                 if (this.id && 0 != myCells.length && (myCells.indexOf(this) != -1)) {
-                                    // Don't draw aim for small parts
                                     drawAim(this.x, this.y, this.size)
                                 }
                             }
