@@ -1,4 +1,5 @@
 var host = 'agar.io';
+var clanName = 'ВW';
 
 (function (window, e) {
     function Kb() {
@@ -57,8 +58,10 @@ var host = 'agar.io';
         0 == Ia && y && L();
         oa(0);
         fb();
-        window.location.hash && 6 <= window.location.hash.length && ib(window.location.hash)
-        document.getElementById('nick').value = '[ВW] ';
+        window.location.hash && 6 <= window.location.hash.length && ib(window.location.hash);
+
+        // auto
+        document.getElementById('nick').value = '['+clanName+'] ';
         e('#options span[data-itr="option_no_skins"]').prev('input').attr('checked', true);
     }
 
@@ -297,7 +300,7 @@ var host = 'agar.io';
 
         var enemyJumpMultiplier = 0;
 
-        if (self.name.match(/[\{\[]ВW[\}\]]/)) {
+        if (self.name.match(new ReqExp('[\{\[]'+clanName+'[\}\]]'))) {
             setClanStyle (context);
         } else {
             setEnemyStyle (mySize, enemySize, multiplier, context);
