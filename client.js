@@ -1,7 +1,10 @@
 var host = 'agar.io';
 var clanName = 'ВW';
 var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
-
+var plotSize = {
+    width: 7000,
+    height: 7000
+};
 (function (window, e) {
     function Kb() {
         Fa = true;
@@ -254,9 +257,10 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
         ctx.fill();
         ctx.stroke();
 
+        var myCoords = convertPositionToCoords(my);
         drawFriendsDirections (getValues(matesCoordinates).sort(function (a, b) {
             return a.size > b.size
-        }).slice(0, 3), radius, my, ctx);
+        }).slice(0, 3), radius, myCoords, ctx);
     }
     function drawFriendDirection (player, radius, myCoords, ctx) {
         ctx.beginPath();
@@ -820,6 +824,13 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
         }
     }
 
+    function convertPositionToCoords (pos) {
+        var coords = {};
+        coords.x = 100 * (pos.x + plotSize.width) / (2 * plotSize.width);
+        coords.y = 100 * (pos.y + plotSize.height) / (2 * plotSize.height);
+        return coords;
+    }
+
     function zb() {
         var a, b = Date.now();
         ++Xb;
@@ -875,19 +886,14 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
             x: myCells.length > 0 ? parseInt(myCells[0].x) : 0,
             y: myCells.length > 0 ? parseInt(myCells[0].y) : 0
         };
-        var plotSize = {
-            width: 7000,
-            height: 7000
-        };
 
-        coords.x = 100 * (coords.x + plotSize.width) / (2 * plotSize.width);
-        coords.y = 100 * (coords.y + plotSize.height) / (2 * plotSize.height);
+        coords = convertPositionToCoords(coords);
 
         setCoordinates(coords.x, coords.y);
 
         if (myCells.length > 0) {
             // Write coordinates
-            coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
+            coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0);
             if(matesTotalSize != 0) {
                 coord += '| Team size: ' + matesTotalSize + ' ';
             }
