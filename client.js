@@ -156,9 +156,9 @@ var plotSize = {
             initializeParse();
         }
 
+        var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
+        var myRoom = window.location.hash.substring(1);
         if(myNickname) {
-            var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
-            var myRoom = window.location.hash.substring(1);
             var myCoordsQuery = new Parse.Query(TeammateCoords);
 
             myCoordsQuery.equalTo("name", myNickname);
