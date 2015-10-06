@@ -200,17 +200,17 @@ var clanName = 'ВW';
         return size * size / 100;
     }
 
-    Object.values = function (obj) {
-        return Object.keys(obj).forEach(function (item) {
+    function getValues (obj) {
+        return Object.keys(obj).map(function (item) {
             return obj[item];
         })
-    };
+    }
     function getPointOnAimRadius (mycoords, player, radius) {
-        var hypotenuse = Math.sqrt(Math.pow(mycoords.x - player.x, 2) + Math.pow(mycoords.x - player.y, 2));
+        var hypotenuse = Math.sqrt(Math.pow(mycoords.x - player.x, 2) + Math.pow(mycoords.y - player.y, 2));
         var k = radius / hypotenuse;
         return {
-            x: k * (mycoords.x - player.x) + player.x,
-            y: k * (mycoords.y - player.y) + player.y
+            x: k * (player.x - mycoords.x) + mycoords.x,
+            y: k * (player.y - mycoords.y) + mycoords.y
         };
     }
     function drawAim(x, y, size) {
@@ -230,7 +230,7 @@ var clanName = 'ВW';
             y: cursorY
         };
 
-        var pointOnRadius = getPointOnAimRadius(my, cursor);
+        var pointOnRadius = getPointOnAimRadius(my, cursor, radius);
 
         ctx.moveTo(x, y);
         ctx.lineTo(pointOnRadius.x, pointOnRadius.y);
@@ -242,18 +242,22 @@ var clanName = 'ВW';
         ctx.fill();
         ctx.stroke();
 
-        drawFriendsDirections (Object.values(matestCoordinates), radius, my, ctx);
+
+        drawFriendsDirections (getValues(matestCoordinates).sort(function (a, b) {
+            return a.size > b.size
+        }).slice(0, 3), radius, my, ctx);
     }
     function drawFriendDirection (player, radius, myCoords, ctx) {
         ctx.beginPath();
         var point = getPointOnAimRadius(myCoords, player, radius);
-        ctx.arc(point.x, point.y, 10, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "rgba(255, 10, 10, 0.1)";
+        ctx.arc(point.x, point.y, 15, 0, 2 * Math.PI, false);
+        ctx.fillStyle = "rgba(255, 0, 0 , .4)";
         ctx.fill();
         ctx.closePath();
     }
     function drawFriendsDirections (coords, radius, myCoords, context) {
         (coords || []).forEach(function (player) {
+            console.log('draw', player);
             drawFriendDirection(player, radius, myCoords, context);
         });
     }
