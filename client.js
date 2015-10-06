@@ -61,7 +61,10 @@ var clanName = 'ВW';
         window.location.hash && 6 <= window.location.hash.length && ib(window.location.hash);
 
         // auto
-        document.getElementById('nick').value = '['+clanName+']' + localStorage.getItem('nickname');
+        document.getElementById('nick').value = '['+clanName+']';
+        if(localStorage.getItem('nickname')) {
+            document.getElementById('nick').value = localStorage.getItem('nickname');
+        }
         e('#options span[data-itr="option_no_skins"]').prev('input').attr('checked', true);
     }
 
@@ -129,7 +132,7 @@ var clanName = 'ВW';
         var myNickname = document.getElementById('nick').value;
         localStorage.setItem('nickname', myNickname);
         var myClanMatches = document.getElementById('nick').value.match(/(\[[^\]]*\])/i);
-        var myClan = myClanMatches[0] || clanName;
+        var myClan = myClanMatches && myClanMatches.length > 0 && myClanMatches[0] || clanName;
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
         var myRoom = window.location.hash.substring(1);
         var myCoordsQuery = new Parse.Query(TeammateCoords);
