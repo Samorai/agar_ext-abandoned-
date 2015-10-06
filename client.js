@@ -143,6 +143,7 @@ var plotSize = {
             localStorage.setItem('nickname', nickname);
             var myClanMatches = nickname.match(/(\[[^\]]*\])/i);
             myClan = myClanMatches ? myClanMatches[0] : clanName;
+            myNickname = nickname;
         }
         return nickname;
     }
@@ -153,6 +154,10 @@ var plotSize = {
     function sync() {
         if(!parse_ready) {
             initializeParse();
+        }
+
+        if(!myNickname) {
+            return;
         }
 
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
@@ -459,7 +464,6 @@ var plotSize = {
 
     function jb() {
         console.log('game started');
-        getNick();
         iAmAlive = true;
         e("#adsBottom").hide();
         e("#overlays").hide();
@@ -468,6 +472,7 @@ var plotSize = {
         U = ea = false;
         hb();
         kb(window.aa)
+        getNick();
     }
 
     function pa(a) {
