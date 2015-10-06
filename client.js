@@ -473,6 +473,7 @@ var plotSize = {
     }
 
     function fa(a) {
+        console.log('Party status change');
         e("#helloContainer").attr("data-gamemode", a);
         V = a;
         e("#gamemode").val(a)
@@ -1190,6 +1191,7 @@ var plotSize = {
     }
 
     function ib(a) {
+        console.log('Join party');
         fa(":party");
         e("#helloContainer").attr("data-party-state",
             "4");
@@ -1198,7 +1200,6 @@ var plotSize = {
         e.ajax("http://m.agar.io/getToken", {
             error: function () {
                 e("#helloContainer").attr("data-party-state", "6")
-
             },
             success: function (b) {
                 b = b.split("\n");
@@ -2139,14 +2140,16 @@ var plotSize = {
                     window.createParty = function () {
                         fa(":party");
                         N = function (a) {
+                            console.log('Create party');
                             $a("/#" + window.encodeURIComponent(a));
-                            e(".partyToken").val(host + "/#" + window.encodeURIComponent(a));
+                            l.val(host + "/#" + window.encodeURIComponent(a));
                             e("#helloContainer").attr("data-party-state", "1")
                         };
                         L()
                     };
                     window.joinParty = ib;
                     window.cancelParty = function () {
+                        console.log('Clean party');
                         $a("/");
                         e("#helloContainer").attr("data-party-state", "0");
                         fa("");
