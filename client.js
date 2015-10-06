@@ -116,7 +116,8 @@ var plotSize = {
         return size * 7.8 * coef;
     }
 
-    // TODO this should run only when user is alive
+
+
     var parse_ready = false;
     var myCoordinates = {
         x: 0,
@@ -124,7 +125,11 @@ var plotSize = {
     };
     var matesTotalSize = 0;
     var mySize = 0;
+    var iAmAlive = false;
+    var mates = [];
     var matesCoordinates = [];
+    var myNickname = getNick();
+    var myClan;
     function setCoordinates (x, y) {
         myCoordinates.x = x;
         myCoordinates.y = y;
@@ -133,25 +138,26 @@ var plotSize = {
         mySize = size;
     }
     function getNick () {
-        return ((document.getElementById('nick') || {}).value || '');
+        var nickname = ((document.getElementById('nick') || {}).value || '');
+        if(nickname) {
+            localStorage.setItem('nickname', nickname);
+            var myClanMatches = nickname.match(/(\[[^\]]*\])/i);
+            myClan = myClanMatches ? myClanMatches[0] : clanName;
+        }
+        return nickname;
     }
     function initializeParse () {
         parse_ready = true;
         Parse.initialize("8WGOIuLZPEK8dU1jlDE31hgVdGnC4tYlfwRsawOw", "lOiAGdw9gZnLstjyj75X4ZRcGUSgda7e5MIEIEFh");
     }
-    setInterval(function() {
+    function sync() {
         if(!parse_ready) {
             initializeParse();
         }
-        var myNickname = getNick();
-        localStorage.setItem('nickname', myNickname);
-        var myClanMatches = myNickname.match(/(\[[^\]]*\])/i);
-        var myClan = myClanMatches ? myClanMatches[0] : clanName;
 
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
         var myRoom = window.location.hash.substring(1);
         var myCoordsQuery = new Parse.Query(TeammateCoords);
-        var iAmAlive = myCoordinates.x !== 0 &&  myCoordinates.y !== 0;
 
         myCoordsQuery.equalTo("name", myNickname);
         myCoordsQuery.find({
@@ -179,7 +185,6 @@ var plotSize = {
                     myCoords.set('size', mySize);
                     myCoords.save();
                     console.log('Creating new user');
-                    console.log(myCoordinates);
                 } else if ( results.length == 1) {
                     result = results[0];
                     result.set('x', myCoordinates.x);
@@ -190,40 +195,59 @@ var plotSize = {
                     result.set('clan', myClan);
                     result.save();
                     console.log('Update user');
-                    console.log(myCoordinates);
-
                 }
             }
         });
 
         var teammateCoordsQuery = new Parse.Query(TeammateCoords);
         teammateCoordsQuery.notEqualTo("name", myNickname);
-        teammateCoordsQuery.equalTo("room", myRoom);
-        teammateCoordsQuery.equalTo("alive", true);
-        teammateCoordsQuery.limit(5);
+        // teammateCoordsQuery.equalTo("room", myRoom);
+        // teammateCoordsQuery.equalTo("alive", true);
+        teammateCoordsQuery.limit(500);
 
-        //var date = new Date();
-        //teammateCoordsQuery.greaterThanOrEqualTo("updatedAt", new Date(date.getTime() - 1*60000)); // Less than a minute ago
+        var date = new Date();
+        teammateCoordsQuery.greaterThanOrEqualTo("updatedAt", new Date(date.getTime() - 5*60000));
 
         teammateCoordsQuery.find({
             success: function(results) {
                 matesTotalSize = 0;
-                matesCoordinates = results.map(function (mate) {
+                e('.bw-active-mates').html(' ');
+                mates = results.map(function (mate) {
                     var newItem = {
                         name: mate.get('name'),
+                        room: mate.get('room'),
+                        alive: mate.get('alive'),
                         size: mate.get('size'),
+                        clan: mate.get('clan'),
+                        lastActive: mate.get('updatedAt'),
                         coords: {
                             x: mate.get('x'),
                             y: mate.get('y')
                         }
                     };
+
+                    // Update mates list
+                    var nameHTML = (newItem.alive == true ? '<s>' : '') + newItem.name + (newItem.alive == true ? '</s>' : '');
+                    var sizeHTML = ' (' + newItem.size + ') in ';
+                    var roomHTML = newItem.room ? '<a onClick="joinParty(\'' + newItem.room + '\')">' + newItem.room + '</a>' : 'solo mode';
+                    e('.bw-active-mates').append('<div>' + nameHTML + sizeHTML + roomHTML + '</div>');
+
                     matesTotalSize += newItem.size;
                     return newItem;
+                });
+                matesCoordinates = mates.filter(function(mate) {
+                    return mate.alive == true && mate.room == myRoom;
                 });
                 matesTotalSize = Math.ceil(matesTotalSize);
             }
         });
-    }, 2000);
+    }
+    e(function() {
+        console.log('ready');
+        e('.agario-profile-panel').append('<b>Active mates:</b> <div class="bw-active-mates"></div>');
+
+        setInterval(sync, 2000);
+    });
 
     function realSize (size) {
         return size * size / 100;
@@ -273,6 +297,9 @@ var plotSize = {
         drawFriendsDirections (mates, radius, my, ctx);
     }
     function drawFriendDirection (player, radius, myCoords, ctx) {
+        if(!player) {
+            return;
+        }
         ctx.beginPath();
         var point = getPointOnAimRadius(myCoords, player.coords, radius);
         ctx.arc(point.x, point.y, 15, 0, 2 * Math.PI, false);
@@ -425,6 +452,9 @@ var plotSize = {
     }
 
     function jb() {
+        console.log('game started');
+        getNick();
+        iAmAlive = true;
         e("#adsBottom").hide();
         e("#overlays").hide();
         e("#stats").hide();
@@ -745,7 +775,7 @@ var plotSize = {
         b += 4;
         for (f = 0; f < C; f++) p =
             a.getUint32(b, true), b += 4, m = H[p], null != m && m.R();
-        Pa && 0 == myCells.length && (tb = Date.now(), Sa = false, ea || U || (skipStats ? (lb(window.ab), Vb(), U = true, e("#overlays").fadeIn(3E3), e("#stats").show()) : oa(3E3)))
+        Pa && 0 == myCells.length && (tb = Date.now(), Sa = false, ea || U || (skipStats ? (lb(window.ab), Vb(), U = true, e("#overlays").fadeIn(3E3), e("#stats").show(), console.log('game ended'), iAmAlive = false) : oa(3E3)))
     }
 
     function Sb() {
