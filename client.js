@@ -197,7 +197,7 @@ var plotSize = {
         });
 
         var teammateCoordsQuery = new Parse.Query(TeammateCoords);
-        //teammateCoordsQuery.notEqualTo("name", myNickname);
+        teammateCoordsQuery.notEqualTo("name", myNickname);
         teammateCoordsQuery.equalTo("room", myRoom);
         teammateCoordsQuery.equalTo("alive", true);
         teammateCoordsQuery.limit(5);
