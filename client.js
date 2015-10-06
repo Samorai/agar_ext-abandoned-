@@ -242,7 +242,7 @@ var clanName = 'ВW';
         ctx.fill();
         ctx.stroke();
 
-        drawFriendsDirections (Object.values(mates_coords), radius, my, ctx);
+        drawFriendsDirections (Object.values(matestCoordinates), radius, my, ctx);
     }
     function drawFriendDirection (player, radius, myCoords, ctx) {
         ctx.beginPath();
