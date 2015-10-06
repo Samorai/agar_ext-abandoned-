@@ -112,8 +112,9 @@ var clanName = 'ВW';
     // TODO this should run only when user is alive
     var parse_ready = false;
     var myCoordinates = {};
+    var matesTotalSize = 0;
     var mySize = 0;
-    var matestCoordinates = {};
+    var matesCoordinates = {};
     function setCoordinates(x, y) {
         myCoordinates = {x: x, y: y};
     }
@@ -185,10 +186,12 @@ var clanName = 'ВW';
 
         teammateCoordsQuery.find({
             success: function(results) {
-                matestCoordinates = {};
+                matesCoordinates = {};
+                matesTotalSize = 0;
                 for (var i = 0; i < results.length; i++) {
                     var mate = results[i];
-                    matestCoordinates[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
+                    matesCoordinates[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
+                    matesTotalSize += mate.get('size');
                 }
             }
         });
@@ -240,7 +243,7 @@ var clanName = 'ВW';
         ctx.fill();
         ctx.stroke();
 
-        drawFriendsDirections (Object.values(matestCoordinates), radius, my, ctx);
+        drawFriendsDirections (Object.values(matesCoordinates), radius, my, ctx);
     }
     function drawFriendDirection (player, radius, myCoords, ctx) {
         ctx.beginPath();
@@ -871,8 +874,8 @@ var clanName = 'ВW';
         if (myCells.length > 0) {
             // Write coordinates
             coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
-            for(mate_name in matestCoordinates) {
-                coord += "| " + mate_name + " X:" + matestCoordinates[mate_name].x + " Y:" + matestCoordinates[mate_name].y;
+            for(mate_name in matesCoordinates) {
+                coord += "| " + mate_name + " X:" + matesCoordinates[mate_name].x + " Y:" + matesCoordinates[mate_name].y;
             }
         }
         0 != O && (null == Ba && (Ba = new CreateCanvasElem(24, "#FFFFFF")),
