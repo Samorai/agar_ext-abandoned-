@@ -230,14 +230,20 @@ var plotSize = {
                     var nameHTML = (newItem.alive == false ? '<s>' : '') + newItem.name + (newItem.alive == false ? '</s>' : '');
                     var sizeHTML = newItem.size ? ' (' + Math.ceil(newItem.size) + ') in ' : ' ';
                     var roomHTML = newItem.room ? '<a onClick="joinParty(\'' + newItem.room + '\')">' + newItem.room + '</a>' : 'solo mode';
+
+                    // Todo remove room link for inactive rooms
                     e('.bw-active-mates').append('<div>' + nameHTML + sizeHTML + roomHTML + '</div>');
 
-                    matesTotalSize += newItem.size;
                     return newItem;
                 });
                 matesCoordinates = mates.filter(function(mate) {
                     return mate.alive == true && mate.room == myRoom;
                 });
+
+                matesCoordinates.forEach(function(mate) {
+                    matesTotalSize += mate.size;
+                });
+
                 matesTotalSize = Math.ceil(matesTotalSize);
             }
         });
