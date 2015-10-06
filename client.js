@@ -156,53 +156,51 @@ var plotSize = {
             initializeParse();
         }
 
-        if(!myNickname) {
-            return;
-        }
+        if(myNickname) {
+            var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
+            var myRoom = window.location.hash.substring(1);
+            var myCoordsQuery = new Parse.Query(TeammateCoords);
 
-        var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
-        var myRoom = window.location.hash.substring(1);
-        var myCoordsQuery = new Parse.Query(TeammateCoords);
+            myCoordsQuery.equalTo("name", myNickname);
+            myCoordsQuery.find({
+                success: function(results)
+                {
+                    var result;
 
-        myCoordsQuery.equalTo("name", myNickname);
-        myCoordsQuery.find({
-            success: function(results)
-            {
-                var result;
-
-                if (results.length > 1) {
-                    console.log("Multiple internal votes on object");
-                    return;
-                }
-                if ( results.length == 0 ) {
-                    if(iAmAlive == false) {
-                        console.log('Not creating dead user');
+                    if (results.length > 1) {
+                        console.log("Multiple internal votes on object");
                         return;
                     }
+                    if ( results.length == 0 ) {
+                        if(iAmAlive == false) {
+                            console.log('Not creating dead user');
+                            return;
+                        }
 
-                    var myCoords = new TeammateCoords();
-                    myCoords.set('name', myNickname);
-                    myCoords.set('x', myCoordinates.x);
-                    myCoords.set('y', myCoordinates.y);
-                    myCoords.set('room', myRoom);
-                    myCoords.set('alive', iAmAlive);
-                    myCoords.set('clan', myClan);
-                    myCoords.set('size', mySize);
-                    myCoords.save();
-                    console.log('Creating new user');
-                } else if ( results.length == 1) {
-                    result = results[0];
-                    result.set('x', myCoordinates.x);
-                    result.set('y', myCoordinates.y);
-                    result.set('room', myRoom);
-                    result.set('alive', iAmAlive);
-                    result.set('size', mySize);
-                    result.set('clan', myClan);
-                    result.save();
-                    console.log('Update user');
+                        var myCoords = new TeammateCoords();
+                        myCoords.set('name', myNickname);
+                        myCoords.set('x', myCoordinates.x);
+                        myCoords.set('y', myCoordinates.y);
+                        myCoords.set('room', myRoom);
+                        myCoords.set('alive', iAmAlive);
+                        myCoords.set('clan', myClan);
+                        myCoords.set('size', mySize);
+                        myCoords.save();
+                        console.log('Creating new user');
+                    } else if ( results.length == 1) {
+                        result = results[0];
+                        result.set('x', myCoordinates.x);
+                        result.set('y', myCoordinates.y);
+                        result.set('room', myRoom);
+                        result.set('alive', iAmAlive);
+                        result.set('size', mySize);
+                        result.set('clan', myClan);
+                        result.save();
+                        console.log('Update user');
+                    }
                 }
-            }
-        });
+            });
+        }
 
         var teammateCoordsQuery = new Parse.Query(TeammateCoords);
         teammateCoordsQuery.notEqualTo("name", myNickname);
