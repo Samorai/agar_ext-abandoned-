@@ -2153,7 +2153,7 @@ var plotSize = {
                         N = function (a) {
                             console.log('Create party');
                             $a("/#" + window.encodeURIComponent(a));
-                            l.val(host + "/#" + window.encodeURIComponent(a));
+                            e(".partyToken").val(host + "/#" + window.encodeURIComponent(a));
                             e("#helloContainer").attr("data-party-state", "1")
                         };
                         L()
