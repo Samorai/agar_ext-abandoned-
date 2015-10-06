@@ -151,7 +151,7 @@ var plotSize = {
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
         var myRoom = window.location.hash.substring(1);
         var myCoordsQuery = new Parse.Query(TeammateCoords);
-        var iAmAlive = myCoordinates.x != 50 || myCoordinates.y != 50;
+        var iAmAlive = myCoordinates.x !== 0 &&  myCoordinates.y !== 0;
 
         myCoordsQuery.equalTo("name", myNickname);
         myCoordsQuery.find({
@@ -197,7 +197,7 @@ var plotSize = {
         });
 
         var teammateCoordsQuery = new Parse.Query(TeammateCoords);
-        teammateCoordsQuery.notEqualTo("name", myNickname);
+        //teammateCoordsQuery.notEqualTo("name", myNickname);
         teammateCoordsQuery.equalTo("room", myRoom);
         teammateCoordsQuery.equalTo("alive", true);
         teammateCoordsQuery.limit(5);
@@ -207,21 +207,18 @@ var plotSize = {
 
         teammateCoordsQuery.find({
             success: function(results) {
-                matesCoordinates = [];
                 matesTotalSize = 0;
-                results.forEach(function (mate) {
-                    matesCoordinates.push({
+                matesCoordinates = results.map(function (mate) {
+                    var newItem = {
                         name: mate.get('name'),
                         size: mate.get('size'),
                         coords: {
                             x: mate.get('x'),
                             y: mate.get('y')
                         }
-                    });
-                });
-                matesTotalSize = 0;
-                matesCoordinates.forEach(function (item) {
-                    matesTotalSize += item.size;
+                    };
+                    matesTotalSize += newItem.size;
+                    return newItem;
                 });
                 matesTotalSize = Math.ceil(matesTotalSize);
             }
@@ -232,11 +229,6 @@ var plotSize = {
         return size * size / 100;
     }
 
-    function getValues (obj) {
-        return Object.keys(obj).map(function (item) {
-            return obj[item];
-        })
-    }
     function getPointOnAimRadius (mycoords, player, radius) {
         var hypotenuse = Math.sqrt(Math.pow(mycoords.x - player.x, 2) + Math.pow(mycoords.y - player.y, 2));
         var k = radius / hypotenuse;
@@ -276,16 +268,13 @@ var plotSize = {
 
         var mates = matesCoordinates.sort(function (a, b) {
             return a.size > b.size
-        }).slice(0, 3).map(function (item) {
-            item.coords = convertCoordsToPosition(item);
-            return item;
-        });
+        }).slice(0, 3);
 
         drawFriendsDirections (mates, radius, my, ctx);
     }
     function drawFriendDirection (player, radius, myCoords, ctx) {
         ctx.beginPath();
-        var point = getPointOnAimRadius(myCoords, player, radius);
+        var point = getPointOnAimRadius(myCoords, player.coords, radius);
         ctx.arc(point.x, point.y, 15, 0, 2 * Math.PI, false);
         ctx.fillStyle = "rgba(255, 0, 0 , .4)";
         ctx.fill();
@@ -926,7 +915,7 @@ var plotSize = {
             var matesCoords = {};
             matesCoordinates.forEach(function (item) {
                 matesCoords = convertPositionToCoords(item.coords);
-                coord += "| " + item.name + " X:" + matesCoords.x + " Y:" + matesCoords.y  + ' ';
+                coord += "| " + item.name + " X:" + matesCoords.x.toFixed(0) + " Y:" + matesCoords.y.toFixed(0)  + ' ';
             });
         }
 
