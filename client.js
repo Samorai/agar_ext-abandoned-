@@ -61,7 +61,7 @@ var clanName = 'ВW';
         window.location.hash && 6 <= window.location.hash.length && ib(window.location.hash);
 
         // auto
-        document.getElementById('nick').value = '['+clanName+'] ';
+        document.getElementById('nick').value = '['+clanName+']' + localStorage.getItem('nickname');
         e('#options span[data-itr="option_no_skins"]').prev('input').attr('checked', true);
     }
 
@@ -127,6 +127,7 @@ var clanName = 'ВW';
             Parse.initialize("8WGOIuLZPEK8dU1jlDE31hgVdGnC4tYlfwRsawOw", "lOiAGdw9gZnLstjyj75X4ZRcGUSgda7e5MIEIEFh");
         }
         var myNickname = document.getElementById('nick').value;
+        localStorage.setItem('nickname', myNickname);
         var myClanMatches = document.getElementById('nick').value.match(/(\[[^\]]*\])/i);
         var myClan = myClanMatches[0] || clanName;
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
@@ -195,7 +196,7 @@ var clanName = 'ВW';
                 }
             }
         });
-    }, 3000);
+    }, 2000);
 
     function realSize (size) {
         return size * size / 100;
@@ -874,6 +875,9 @@ var clanName = 'ВW';
         if (myCells.length > 0) {
             // Write coordinates
             coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
+            if(matesTotalSize != 0) {
+                coord += '| Team size: ' + matesTotalSize;
+            }
             for(mate_name in matesCoordinates) {
                 coord += "| " + mate_name + " X:" + matesCoordinates[mate_name].x + " Y:" + matesCoordinates[mate_name].y;
             }
