@@ -129,7 +129,7 @@ var plotSize = {
         mySize = size;
     }
     function getNick () {
-        return document.getElementById('nick').value;
+        return (document.getElementById('nick') || {}).value;
     }
     function initializeParse () {
         parse_ready = true;
