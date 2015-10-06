@@ -257,10 +257,16 @@ var plotSize = {
         ctx.fill();
         ctx.stroke();
 
-        var myCoords = convertPositionToCoords(my);
-        drawFriendsDirections (getValues(matesCoordinates).sort(function (a, b) {
+        var mates = getValues(matesCoordinates).sort(function (a, b) {
             return a.size > b.size
-        }).slice(0, 3), radius, myCoords, ctx);
+        }).slice(0, 3).map(function (item) {
+            var coords = convertCoordsToPosition(item);
+            item.x = coords.x;
+            item.y = coords.y;
+            return item;
+        });
+
+        drawFriendsDirections (mates, radius, my, ctx);
     }
     function drawFriendDirection (player, radius, myCoords, ctx) {
         ctx.beginPath();
@@ -829,6 +835,12 @@ var plotSize = {
         coords.x = 100 * (pos.x + plotSize.width) / (2 * plotSize.width);
         coords.y = 100 * (pos.y + plotSize.height) / (2 * plotSize.height);
         return coords;
+    }
+    function convertCoordsToPosition (coords) {
+        return {
+            x: coords.x / 100 * plotSize.width - plotSize.width,
+            y: coords.y / 100 * plotSize.height - plotSize.height,
+        };
     }
 
     function zb() {
