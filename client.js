@@ -125,15 +125,22 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
     function setSize(size) {
         mySize = size;
     }
+    function getNick () {
+        return document.getElementById('nick').value;
+    }
+    function initializeParse () {
+        parse_ready = true;
+        Parse.initialize("8WGOIuLZPEK8dU1jlDE31hgVdGnC4tYlfwRsawOw", "lOiAGdw9gZnLstjyj75X4ZRcGUSgda7e5MIEIEFh");
+    }
     setInterval(function() {
         if(!parse_ready) {
-            parse_ready = true;
-            Parse.initialize("8WGOIuLZPEK8dU1jlDE31hgVdGnC4tYlfwRsawOw", "lOiAGdw9gZnLstjyj75X4ZRcGUSgda7e5MIEIEFh");
+            initializeParse();
         }
-        var myNickname = document.getElementById('nick').value;
+        var myNickname = getNick();
         localStorage.setItem('nickname', myNickname);
-        var myClanMatches = document.getElementById('nick').value.match(/(\[[^\]]*\])/i);
-        var myClan = myClanMatches && myClanMatches.length > 0 && myClanMatches[0] || clanName;
+        var myClanMatches = myNickname.match(/(\[[^\]]*\])/i);
+        var myClan = myClanMatches ? myClanMatches[0] : clanName;
+
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
         var myRoom = window.location.hash.substring(1);
         var myCoordsQuery = new Parse.Query(TeammateCoords);
@@ -143,8 +150,11 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
         myCoordsQuery.find({
             success: function(results)
             {
-                if ( results.length == 0 )
-                {
+                if (results.length > 1) {
+                    console.log("Multiple internal votes on object");
+                    return;
+                }
+                if ( results.length == 0 ) {
                     if(iAmAlive == false) {
                         console.log('Not creating dead user');
                         return;
@@ -161,9 +171,7 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
                     myCoords.save();
                     console.log('Creating new user');
                     console.log(myCoordinates);
-                }
-                else if ( results.length == 1)
-                {
+                } else if ( results.length == 1) {
                     result = results[0];
                     result.set('x', myCoordinates.x);
                     result.set('y', myCoordinates.y);
@@ -173,11 +181,7 @@ var clanNameRegexp = new RegExp('[\\{\\[]'+clanName+'[\\}\\]]', 'g');
                     result.set('clan', myClan);
                     result.save();
                 }
-                else
-                {
-                    console.log("Multiple internal votes on object");
-                }
-            },
+            }
         });
 
         var teammateCoordsQuery = new Parse.Query(TeammateCoords);
