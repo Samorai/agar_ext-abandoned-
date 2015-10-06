@@ -111,38 +111,60 @@ var clanName = 'ВW';
 
     // TODO this should run only when user is alive
     var parse_ready = false;
-    var my_coords = {};
-    var mates_coords = {};
+    var myCoordinates = {};
+    var mySize = 0;
+    var matestCoordinates = {};
     function setCoordinates(x, y) {
-        my_coords = {x: x, y: y};
+        myCoordinates = {x: x, y: y};
+    }
+    function setSize(size) {
+        mySize = size;
     }
     setInterval(function() {
         if(!parse_ready) {
             parse_ready = true;
             Parse.initialize("8WGOIuLZPEK8dU1jlDE31hgVdGnC4tYlfwRsawOw", "lOiAGdw9gZnLstjyj75X4ZRcGUSgda7e5MIEIEFh");
         }
-        var my_nickname = document.getElementById('nick').value;
+        var myNickname = document.getElementById('nick').value;
+        var myClanMatches = document.getElementById('nick').value.match(/(\[[^\]]*\])/i);
+        var myClan = myClanMatches[0] || clanName;
         var TeammateCoords = Parse.Object.extend("TeammateCoordinates");
+        var myRoom = window.location.hash.substring(1);
         var myCoordsQuery = new Parse.Query(TeammateCoords);
+        var iAmAlive = myCoordinates.x != 50 || myCoordinates.y != 50;
 
-        myCoordsQuery.equalTo("name", my_nickname);
+        myCoordsQuery.equalTo("name", myNickname);
         myCoordsQuery.find({
             success: function(results)
             {
                 if ( results.length == 0 )
                 {
+                    if(iAmAlive == false) {
+                        return;
+                    }
+
+
                     var myCoords = new TeammateCoords();
-                    myCoords.set('name', my_nickname);
-                    myCoords.set('x', my_coords.x);
-                    myCoords.set('y', my_coords.y);
+                    myCoords.set('name', myNickname);
+                    myCoords.set('x', myCoordinates.x);
+                    myCoords.set('y', myCoordinates.y);
+                    myCoords.set('room', myRoom);
+                    myCoords.set('alive', iAmAlive);
+                    myCoords.set('clan', myClan);
+                    myCoords.set('size', mySize);
                     myCoords.save();
                     console.log('Creating new user');
+                    console.log(myCoordinates);
                 }
                 else if ( results.length == 1)
                 {
                     result = results[0];
-                    result.set('x', my_coords.x);
-                    result.set('y', my_coords.y);
+                    result.set('x', myCoordinates.x);
+                    result.set('y', myCoordinates.y);
+                    result.set('room', myRoom);
+                    result.set('alive', iAmAlive);
+                    result.set('size', mySize);
+                    result.set('clan', myClan);
                     result.save();
                 }
                 else
@@ -153,22 +175,22 @@ var clanName = 'ВW';
         });
 
         var teammateCoordsQuery = new Parse.Query(TeammateCoords);
-        teammateCoordsQuery.notEqualTo("name", my_nickname);
+        teammateCoordsQuery.notEqualTo("name", myNickname);
+        teammateCoordsQuery.notEqualTo("room", myRoom);
+        teammateCoordsQuery.notEqualTo("alive", true);
         teammateCoordsQuery.limit(5);
 
         var date = new Date();
         teammateCoordsQuery.greaterThanOrEqualTo("updatedAt", new Date(date.getTime() - 1*60000)); // Less than a minute ago
 
-        // TODO add filter by room id
-
         // TODO add active/inactive filter (remove dead users)
 
         teammateCoordsQuery.find({
             success: function(results) {
-                console.log(results);
+                matestCoordinates = {};
                 for (var i = 0; i < results.length; i++) {
                     var mate = results[i];
-                    mates_coords[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
+                    matestCoordinates[mate.get('name')] = {x: Math.ceil(mate.get('x')), y: Math.ceil(mate.get('y'))};
                 }
             }
         });
@@ -282,6 +304,8 @@ var clanName = 'ВW';
         });
         var ignoredSizeMedium = myTotalSize/40; // Ignore 2.5% of mass
 
+        setSize(myTotalSize);
+
         if (myCells.length > 1) {
             for (var z = 0; z < myCells.length; z++) {
                 if (myCells[z].size < mySize && myCells[z].size > ignoredSizeMedium) {
@@ -300,7 +324,7 @@ var clanName = 'ВW';
 
         var enemyJumpMultiplier = 0;
 
-        if (self.name.match(new ReqExp('[\{\[]'+clanName+'[\}\]]'))) {
+        if (self.name.match(new RegExp('[\{\[]'+clanName+'[\}\]]'))) {
             setClanStyle (context);
         } else {
             setEnemyStyle (mySize, enemySize, multiplier, context);
@@ -817,8 +841,8 @@ var clanName = 'ВW';
         if (myCells.length > 0) {
             // Write coordinates
             coord = "x: " + coords.x.toFixed(0) + " y: " + coords.y.toFixed(0)
-            for(mate_name in mates_coords) {
-                coord += "| " + mate_name + " X:" + mates_coords[mate_name].x + " Y:" + mates_coords[mate_name].y;
+            for(mate_name in matestCoordinates) {
+                coord += "| " + mate_name + " X:" + matestCoordinates[mate_name].x + " Y:" + matestCoordinates[mate_name].y;
             }
         }
         0 != O && (null == Ba && (Ba = new CreateCanvasElem(24, "#FFFFFF")),
