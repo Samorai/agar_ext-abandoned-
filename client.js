@@ -140,9 +140,9 @@ var clanName = 'ВW';
                 if ( results.length == 0 )
                 {
                     if(iAmAlive == false) {
+                        console.log('Not creating dead user');
                         return;
                     }
-
 
                     var myCoords = new TeammateCoords();
                     myCoords.set('name', myNickname);
@@ -182,8 +182,6 @@ var clanName = 'ВW';
 
         var date = new Date();
         teammateCoordsQuery.greaterThanOrEqualTo("updatedAt", new Date(date.getTime() - 1*60000)); // Less than a minute ago
-
-        // TODO add active/inactive filter (remove dead users)
 
         teammateCoordsQuery.find({
             success: function(results) {
