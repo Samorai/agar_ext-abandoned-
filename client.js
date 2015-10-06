@@ -309,6 +309,9 @@ var plotSize = {
         if(!player) {
             return;
         }
+        // TODO don't draw direction if friend is in view
+        //console.log(player.coords, myCoords);
+        // Math.sqrt(Math.pow(self.x - me.x, 2) + Math.pow(self.y - me.y, 2))
         ctx.beginPath();
         var point = getPointOnAimRadius(myCoords, player.coords, radius);
         ctx.arc(point.x, point.y, 15, 0, 2 * Math.PI, false);
