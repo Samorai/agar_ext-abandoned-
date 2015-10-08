@@ -305,24 +305,32 @@ var plotSize = {
 
         drawFriendsDirections (mates, radius, my, ctx);
     }
-    function drawFriendDirection (player, radius, myCoords, ctx) {
+    function drawFriendDirection (player, radius, myCoords, ctx, distance) {
         if(!player) {
             return;
         }
-        // TODO don't draw direction if friend is in view
-        //console.log(player.coords, myCoords);
-        // Math.sqrt(Math.pow(self.x - me.x, 2) + Math.pow(self.y - me.y, 2))
+
+        var red = 255 - distance / 77.64;
+        var green = 255 - red;
+        console.log('r:', red, ' g:', green);
+
         ctx.beginPath();
         var point = getPointOnAimRadius(myCoords, player.coords, radius);
         ctx.arc(point.x, point.y, 15, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "rgba(255, 0, 0 , .4)";
+        ctx.fillStyle = "rgba(" + red + ", " + green + ", 0 , .4)";
         ctx.fill();
         ctx.closePath();
     }
     function drawFriendsDirections (coords, radius, myCoords, context) {
         (coords || []).forEach(function (player) {
-            //console.log('draw', player);
-            drawFriendDirection(player, radius, myCoords, context);
+            if(!player) {
+                return;
+            }
+
+            var distance = Math.sqrt(Math.pow(player.coords.x - myCoords.x, 2) + Math.pow(player.coords.y - myCoords.y, 2));
+            if(distance > radius) {
+                drawFriendDirection(player, radius, myCoords, context, distance);
+            }
         });
     }
 
