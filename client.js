@@ -310,9 +310,9 @@ var plotSize = {
             return;
         }
 
-        var red = 255 - distance / 77.64;
-        var green = 255 - red;
-        console.log('r:', red, ' g:', green);
+        var green = Math.round(255 - distance / 77.64);
+        var red = 255 - green;
+
 
         ctx.beginPath();
         var point = getPointOnAimRadius(myCoords, player.coords, radius);
