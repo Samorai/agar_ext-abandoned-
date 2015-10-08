@@ -312,10 +312,9 @@ var plotSize = {
 
         var green = Math.round(255 - distance / 77.64);
         var red = 255 - green;
-        var size = Math.round(matesTotalSize/player.size*100)/100*15;
-        if(size < 5) {
-            size = 5;
-        }
+        var size = Math.round(matesTotalSize/player.size*100)/100*20;
+        size = Math.max(5, size);
+        size = Math.min(size, 20);
 
         ctx.beginPath();
         var point = getPointOnAimRadius(myCoords, player.coords, radius);
