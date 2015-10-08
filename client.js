@@ -312,12 +312,15 @@ var plotSize = {
 
         var green = Math.round(255 - distance / 77.64);
         var red = 255 - green;
-
+        var size = Math.round(matesTotalSize/player.size*100)/100*0.4;
+        if(size < 0.2) {
+            size = 0.2;
+        }
 
         ctx.beginPath();
         var point = getPointOnAimRadius(myCoords, player.coords, radius);
         ctx.arc(point.x, point.y, 15, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "rgba(" + red + ", " + green + ", 0 , .4)";
+        ctx.fillStyle = "rgba(" + red + ", " + green + ", 0 , " + size + ")";
         ctx.fill();
         ctx.closePath();
     }
