@@ -20,9 +20,10 @@ if (window.location.href.indexOf('/agar.io/') + 1) {
         var nodeList = newPage.querySelectorAll('script');
         for (var i = 0; i < nodeList.length; ++i) {
             var node = nodeList[i];
-            if (node.innerText.indexOf('POSITIVE_INFINITY') > 0){
+            console.log(node.src);
+            if (node.src.indexOf('main_out') > 0){
                 node.removeAttribute('src');
-                node.innerText = '';
+                node.src = '';
             }
         }
         document.replaceChild(newPage, document.documentElement);
