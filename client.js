@@ -168,12 +168,12 @@ var plotSize = {
                     var result;
 
                     if (results.length > 1) {
-                        console.log("Multiple internal votes on object");
+                        //console.log("Multiple internal votes on object");
                         return;
                     }
                     if ( results.length == 0 ) {
                         if(iAmAlive == false) {
-                            console.log('Not creating dead user');
+                            //console.log('Not creating dead user');
                             return;
                         }
 
@@ -186,7 +186,7 @@ var plotSize = {
                         myCoords.set('clan', myClan);
                         myCoords.set('size', mySize);
                         myCoords.save();
-                        console.log('Creating new user');
+                        //console.log('Creating new user');
                     } else if ( results.length == 1) {
                         result = results[0];
                         result.set('x', myCoordinates.x);
@@ -196,7 +196,7 @@ var plotSize = {
                         result.set('size', mySize);
                         result.set('clan', myClan);
                         result.save();
-                        console.log('Update user');
+                        //console.log('Update user');
                     }
                 }
             });
@@ -252,8 +252,8 @@ var plotSize = {
         });
     }
     e(function() {
-        console.log('ready');
-        e('.agario-profile-panel').append('<b>Active mates:</b> <div class="bw-active-mates"></div>');
+        //console.log('ready');
+        e('#instructions').append('<b>Active mates:</b> <div class="bw-active-mates"></div>');
 
         setInterval(sync, 2000);
     });

@@ -24,6 +24,13 @@ if (window.location.href.indexOf('/agar.io/') + 1) {
                 node.removeAttribute('src');
                 node.src = '';
             }
+if (node.innerHTML.indexOf('MiniclipAPI') > 0)
+{
+    //node.removeAttribute('src');
+    //node.innerHTML = '';
+    //node.src = '';
+}
+
         }
         document.replaceChild(newPage, document.documentElement);
         var s;
