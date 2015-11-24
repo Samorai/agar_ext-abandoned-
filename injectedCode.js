@@ -37,6 +37,7 @@ if (node.innerHTML.indexOf('MiniclipAPI') > 0)
         var scripts = [
             chrome.extension.getURL('client.js'),
             'http://www.parsecdn.com/js/parse-latest.js',
+            // 'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js'
         ];
         for (i = 0; i < scripts.length; ++i) {
             s = document.createElement('SCRIPT');

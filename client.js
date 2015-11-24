@@ -6,6 +6,13 @@ var plotSize = {
     height: 7000
 };
 (function (window, e) {
+
+    var automateFeed = false;
+    var jquery = e;
+    function simulateKeyPress(code) {
+      jquery.event.trigger({ type : 'keydown', which : code });
+    }
+
     function Kb() {
         Fa = true;
         info();
@@ -38,7 +45,14 @@ var plotSize = {
         var a = false,
             b = false,
             c = false;
+        var automateFeed = null;
         window.onkeydown = function (n) {
+            if (n.keyCode == 69) {
+                console.log('automate');
+                ba();
+                sendKeyPress(21);
+            }
+
             32 != n.keyCode || a || (ba(), sendKeyPress(17), a = true);
             81 != n.keyCode || b || (sendKeyPress(18), b = true);
             87 != n.keyCode || c || (ba(), sendKeyPress(21), c = true);
