@@ -19,6 +19,7 @@
     "permissions": ["activeTab"],
     "web_accessible_resources": [
         "i18n.js",
+        "client_new.js",
         "client.js"
     ]
 }

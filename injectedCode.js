@@ -34,8 +34,12 @@ if (node.innerHTML.indexOf('MiniclipAPI') > 0)
         }
         document.replaceChild(newPage, document.documentElement);
         var s;
+        Array.prototype.slice.call(document.querySelectorAll('script')).forEach(function (item) {
+            if (item.src.match('main_out.js')) item.remove();
+        })
         var scripts = [
-            chrome.extension.getURL('client.js'),
+            chrome.extension.getURL('client_new.js'),
+            // chrome.extension.getURL('client.js'),
             'http://www.parsecdn.com/js/parse-latest.js',
             // 'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js'
         ];
