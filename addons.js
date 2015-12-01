@@ -118,18 +118,18 @@
     },
     drawCell: function (cell) {
       if (cell.realSize > 10) this.drawMass(cell);
-      if (cell.isMy) this.drawAim(cell);
+      if (cell.isMy) this.drawRadius(cell, color);
 
     },
-    drawAim: function (cell) {
+    drawRadius: function (cell, color, strokeColor) {
       var ctx = this.context;
 
       var radius = getShootRange(cell.size);
 
       ctx.beginPath();
       ctx.arc(cell.x, cell.y, radius, 0, 2 * Math.PI, false);
-      ctx.strokeStyle = "rgba(0,0,0, 0.1)";
-      ctx.fillStyle = "rgba(98, 255, 37, 0.05)";
+      ctx.strokeStyle = strokeColor || "rgba(0,0,0, 0.1)";
+      ctx.fillStyle = color || "rgba(98, 255, 37, 0.05)";
       ctx.fill();
       ctx.stroke();
 
