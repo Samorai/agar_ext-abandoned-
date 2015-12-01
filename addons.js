@@ -55,8 +55,15 @@
 
   function calcRealSize (item) {
     return item.size * item.size / 100;
-
   }
+  function getShootRange(size) {
+    var coef = 100 / size;
+    if(coef < 0.3){
+      coef = 0.3;
+    }
+    return size * 7.8 * coef;
+  }
+
   var Plugin = function () {};
   Plugin.prototype = {
     multiplier: 1.34,
@@ -97,6 +104,7 @@
       }.bind(this));
     },
     modifyMyCell: function (cell) {
+      cell.isMy = true;
       cell.color = '#9b047d';
     },
     modifyFriendCell: function (cell) {
@@ -108,8 +116,26 @@
     modifyEnemyCell: function (cell) {
       cell.color = getEnemyColor(cell.realSize, this.size, this.multiplier);
     },
+    drawCell: function (cell) {
+      if (cell.realSize > 10) this.drawMass(cell);
+      if (cell.isMy) this.drawAim(cell);
+
+    },
+    drawAim: function (cell) {
+      var ctx = this.context;
+
+      var radius = getShootRange(cell.size);
+
+      ctx.beginPath();
+      ctx.arc(cell.x, cell.y, radius, 0, 2 * Math.PI, false);
+      ctx.strokeStyle = "rgba(0,0,0, 0.1)";
+      ctx.fillStyle = "rgba(98, 255, 37, 0.05)";
+      ctx.fill();
+      ctx.stroke();
+
+    },
     drawMass: function (item) {
-      if (item.size < 20) return;
+      console.log(item);
       var fontSize = item.realSize * .1;
       fontSize = fontSize < 25 ? 25 : fontSize > 50 ? 50 : fontSize;
 

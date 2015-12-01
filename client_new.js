@@ -1344,7 +1344,7 @@
     i = 0;
     for (;i < codeSegments.length;i++) {
       codeSegments[i].p(ctx);
-      window.addon.drawMass(codeSegments[i]);
+      window.addon.drawCell(codeSegments[i]);
     }
     if (jb) {
       /** @type {number} */
