@@ -1,24 +1,28 @@
 {
-    "manifest_version": 2,
-    "name": "Agar Time",
-    "version": "0.3.2",
-    "content_scripts": [
-        {
-            "matches": [
-                "*://*/*"
-            ],
-            "js": [
-                "jquery.min.js",
-                "injectedCode.js"
-            ]
-        }
-    ],
-    "browser_action": {
-        "default_title": "AgarTime"
-    },
-    "permissions": ["activeTab"],
-    "web_accessible_resources": [
-        "i18n.js",
-        "client_new.js"
-    ]
+  "manifest_version": 2,
+  "name": "Agar Time",
+  "version": "0.3.2",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "jquery.min.js",
+        "injectedCode.js"
+      ]
+    }
+  ],
+  "browser_action": {
+    "default_title": "AgarTime"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "web_accessible_resources": [
+    "i18n.js",
+    "addons.js",
+    "client_new.js",
+    "client.js"
+  ]
 }

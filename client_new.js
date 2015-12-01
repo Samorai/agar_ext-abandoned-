@@ -1,4 +1,6 @@
+
 (function(self, $) {
+
 
   /**
    * @return {undefined}
@@ -201,10 +203,7 @@
       var bottom = Number.NEGATIVE_INFINITY;
       /** @type {number} */
       var i = 0;
-      
-      // function additionals (myCells, context, self) {
-      window.addon(items, codeSegments, ctx, this);
-      
+
       for (;i < codeSegments.length;i++) {
         var options = codeSegments[i];
         if (!!options.H()) {
@@ -1075,7 +1074,7 @@
         o.va = node;
         o.wa = data;
       }
-      /** @type {boolean} */
+      /** @type isVirus {boolean} */
       o.c = c;
       /** @type {boolean} */
       o.h = h;
@@ -1330,6 +1329,8 @@
     codeSegments.sort(function(a, b) {
       return a.size == b.size ? a.id - b.id : a.size - b.size;
     });
+    window.addon.redraw(items, codeSegments, ctx, this);
+
     ctx.save();
     ctx.translate(width / 2, height / 2);
     ctx.scale(scale, scale);
@@ -1343,6 +1344,7 @@
     i = 0;
     for (;i < codeSegments.length;i++) {
       codeSegments[i].p(ctx);
+      window.addon.drawMass(codeSegments[i]);
     }
     if (jb) {
       /** @type {number} */
@@ -2522,7 +2524,7 @@
               frame.id = id;
               document.getElementById(el).appendChild(frame);
               el = frame.contentWindow ? frame.contentWindow.document : frame.contentDocument.document;
-              el.open().write("<html>\n<head>\n<script type='text/javascript'>inDapIF=true;\n\x3c/script>\n</head>\n<body style='margin : 0; padding: 0;'>\n\x3c!-- Rubicon Project Smart Tag --\x3e\n<script type='text/javascript'>\nrp_account = '" + data.acct + "';\nrp_site = '" + data.site + "';\nrp_zonesize  = '" + data.zone + "-" + data.size + "';\nrp_adtype = 'js';\nrp_kw = '" + data.kw + "';\nrp_visitor = " + data.visitor + ";\nrp_inventory = " + data.inventory + ";\n\x3c/script>\n<script type='text/javascript' src= " + 
+              el.open().write("<html>\n<head>\n<script type='text/javascript'>inDapIF=true;\n\x3c/script>\n</head>\n<body style='margin : 0; padding: 0;'>\n\x3c!-- Rubicon Project Smart Tag --\x3e\n<script type='text/javascript'>\nrp_account = '" + data.acct + "';\nrp_site = '" + data.site + "';\nrp_zonesize  = '" + data.zone + "-" + data.size + "';\nrp_adtype = 'js';\nrp_kw = '" + data.kw + "';\nrp_visitor = " + data.visitor + ";\nrp_inventory = " + data.inventory + ";\n\x3c/script>\n<script type='text/javascript' src= " +
               e + "//ads.rubiconproject.com/ad/" + data.acct + '.js">\x3c/script>\n</body>\n</html>');
               el.close();
             };
@@ -3428,6 +3430,7 @@
                 if (this.P) {
                   ctx.strokeText(caracter, 3, h - d / 2);
                 }
+                console.log(caracter);
                 ctx.fillText(caracter, 3, h - d / 2);
               }
               return this.j;

@@ -427,7 +427,7 @@ var plotSize = {
             return previousValue + currentValue;
         });
         var ignoredSizeMedium = myTotalSize/40; // Ignore 2.5% of mass
-
+        console.log(totalSize);
         setSize(myTotalSize);
 
         if (myCells.length > 1) {
