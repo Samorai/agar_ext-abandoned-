@@ -1,15 +1,4 @@
-(function (window) {
-
-
-    function additionals (cells, context, self) {
-    	
-    }
-
-    window.addon = additionals;
-
-})(window);
 (function(self, $) {
-	
 
   /**
    * @return {undefined}
@@ -214,7 +203,7 @@
       var i = 0;
       
       // function additionals (myCells, context, self) {
-      window.addon(codeSegments, ctx, this);
+      window.addon(items, codeSegments, ctx, this);
       
       for (;i < codeSegments.length;i++) {
         var options = codeSegments[i];
