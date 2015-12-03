@@ -3430,7 +3430,7 @@
                 if (this.P) {
                   ctx.strokeText(caracter, 3, h - d / 2);
                 }
-                console.log(caracter);
+                // console.log(caracter);
                 ctx.fillText(caracter, 3, h - d / 2);
               }
               return this.j;

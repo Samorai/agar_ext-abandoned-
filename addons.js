@@ -118,7 +118,7 @@
     },
     drawCell: function (cell) {
       if (cell.realSize > 10) this.drawMass(cell);
-      if (cell.isMy) this.drawRadius(cell, color);
+      if (cell.isMy) this.drawRadius(cell);
 
     },
     drawRadius: function (cell, color, strokeColor) {
@@ -135,7 +135,7 @@
 
     },
     drawMass: function (item) {
-      console.log(item);
+      // console.log(item);
       var fontSize = item.realSize * .1;
       fontSize = fontSize < 25 ? 25 : fontSize > 50 ? 50 : fontSize;
 
